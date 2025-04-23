@@ -1,0 +1,130 @@
+{% extends "./base/base.html" %}
+{% block title %}
+    {{ manga.title }} - Read Free Manga Chapters | MangaFoxy
+{% endblock title %}
+{% block content %}
+    <div class="card bg-base-100 shadow-md">
+        <!-- Main wrapper: Stack on mobile, side-by-side on sm+ -->
+        <div class="flex flex-col sm:flex-row">
+            <!-- Image: full width on mobile -->
+            <figure>
+                <img src="{{ manga.image_url }}"
+                     alt="{{ manga.title }}"
+                     class="w-full h-auto object-cover"
+                     loading="lazy" />
+            </figure>
+            <!-- Card Body -->
+            <div class="card-body flex flex-col justify-between w-full sm:w-2/3">
+                <!-- Title -->
+                <h1 class="card-title text-xl sm:text-2xl font-bold text-base-content">{{ manga.title }}</h1>
+                <!-- Meta Information -->
+                <section aria-label="Manga information"
+                         class="mt-2 space-y-2 text-sm text-gray-700">
+                    {% if manga.rank %}
+                        <div class="flex items-center gap-2">
+                            <strong class="text-base-content">Rank:</strong>
+                            <span class="font-semibold">#{{ manga.rank }}</span>
+                        </div>
+                    {% endif %}
+                    {% if manga.rating %}
+                        <div class="flex items-center gap-2">
+                            <strong class="text-base-content">Rating:</strong>
+                            <span class="font-semibold">{{ manga.rating }}/5</span>
+                        </div>
+                    {% endif %}
+                    {% if manga.genre %}
+                        <div class="flex items-start gap-2 flex-wrap">
+                            <strong class="text-base-content">Genres:</strong>
+                            <ul class="flex flex-wrap gap-2 list-none m-0 p-0">
+                                {% for g in manga.genre %}
+                                    <li>
+                                        <div class="badge badge-soft badge-info">{{ g }}</div>
+                                        {% comment %} <span class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-800 text-xs font-medium">{{ g }}</span> {% endcomment %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <!-- Release + Status -->
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-6 text-sm mt-2">
+                        {% if manga.year %}
+                            <div class="flex items-center gap-1">
+                                <span class="font-medium text-base-content">Release:</span>
+                                <time datetime="{{ manga.year }}" class="font-semibold text-base-content">{{ manga.year }}</time>
+                            </div>
+                        {% endif %}
+                        {% if manga.status %}
+                            {% comment %} <div class="flex items-center gap-1 mt-1 sm:mt-0">
+                                <span class="font-medium text-base-content">Status:</span>
+                                <span class="inline-block px-2 py-0.5 rounded {% if manga.status == 'ongoing' %} bg-green-100 text-green-700 {% elif manga.status == 'completed' %} bg-blue-100 text-blue-700 {% elif manga.status == 'hiatus' %} bg-yellow-100 text-yellow-700 {% else %} bg-gray-100 text-gray-700 {% endif %} text-xs uppercase font-semibold tracking-wide">
+                                    {{ manga.status }}
+                                </span>
+                            </div> {% endcomment %}
+                            <div class="flex items-center gap-2 mt-1 sm:mt-0">
+                                <span class="font-medium text-base-content">Status:</span>
+                                {% if manga.status == 'ongoing' %}
+                                    <div class="flex items-center gap-1">
+                                        <div class="inline-grid *:[grid-area:1/1] relative w-3 h-3">
+                                            <div class="status status-success animate-ping"></div>
+                                            <div class="status status-success"></div>
+                                        </div>
+                                        <span class="text-xs font-semibold uppercase text-green-700">Ongoing</span>
+                                    </div>
+                                {% elif manga.status == 'completed' %}
+                                    <div class="flex items-center gap-1">
+                                        <div class="inline-grid *:[grid-area:1/1] relative w-3 h-3">
+                                            <div class="status status-info animate-ping"></div>
+                                            <div class="status status-info"></div>
+                                        </div>
+                                        <span class="text-xs font-semibold uppercase text-blue-700">Completed</span>
+                                    </div>
+                                {% elif manga.status == 'hiatus' %}
+                                    <div class="flex items-center gap-1">
+                                        <div class="inline-grid *:[grid-area:1/1] relative w-3 h-3">
+                                            <div class="status status-warning animate-ping"></div>
+                                            <div class="status status-warning"></div>
+                                        </div>
+                                        <span class="text-xs font-semibold uppercase text-yellow-700">Hiatus</span>
+                                    </div>
+                                {% else %}
+                                    <div class="flex items-center gap-1">
+                                        <div class="inline-grid *:[grid-area:1/1] relative w-3 h-3">
+                                            <div class="status status-neutral animate-ping"></div>
+                                            <div class="status status-neutral"></div>
+                                        </div>
+                                        <span class="text-xs font-semibold uppercase text-gray-700">{{ manga.status|title }}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </section>
+                <!-- Button -->
+                <div class="card-actions mt-auto pt-4">
+                    <a href="#" class="btn btn-primary w-full sm:w-auto">Read Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if manga.summary %}
+        <div class="card bg-base-100 shadow-md mt-10">
+            <div class="card-body">
+                <h2 class="card-title">Summary</h2>
+                <div class="w-full">{{ manga.summary }}</div>
+            </div>
+        </div>
+    {% endif %}
+    {% if chapters %}
+        <ul class="grid sm:grid-cols-2 grid-cols-1 gap-4 p-4 list bg-base-100 rounded-box shadow-md">
+            {% for chap in chapters %}
+                {% for c,l in chap.items %}
+                    <li class="list-row">
+                        <div>
+                            <a class="link" href={{ c }}>{{ l }}</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock content %}

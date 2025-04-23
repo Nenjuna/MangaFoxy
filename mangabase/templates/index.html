@@ -1,0 +1,14 @@
+{% extends "./base/base.html" %}
+{% block title %}
+  All Mangas
+{% endblock title %}
+{% block content %}
+  <h2 class="text-xs p-4 pb-2 opacity-60">All Manga Titles</h2>
+  <ul class="grid sm:grid-cols-2 grid-cols-1 gap-4 p-4 list bg-base-100 rounded-box shadow-md">
+    {% for manga in mangas %}
+      {% include "./components/manga_card.html" with manga=manga %}
+    {% empty %}
+      <p>No manga found.</p>
+    {% endfor %}
+  </ul>
+{% endblock content %}

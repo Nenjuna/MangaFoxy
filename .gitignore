@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+# Django media/static
+media/
+staticfiles/
+
+# VSCode & IDEs
+.vscode/
+.idea/
+
+# Node
+node_modules/
+
+# System
+.DS_Store
