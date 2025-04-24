@@ -2,6 +2,12 @@
 {% block title %}
     {{ manga.title }} - Read Free Manga Chapters | MangaFoxy
 {% endblock title %}
+{% block meta_description %}
+    {{ meta_description }}
+{% endblock meta_description %}
+{% block meta_keywords %}
+    {{ manga.title }}, {{ manga.genre|join:", " }}, manga online, read free manga
+{% endblock meta_keywords %}
 {% block content %}
     <div class="card bg-base-100 shadow-md">
         <!-- Main wrapper: Stack on mobile, side-by-side on sm+ -->
@@ -117,14 +123,29 @@
     {% if chapters %}
         <ul class="grid sm:grid-cols-2 grid-cols-1 gap-4 p-4 list bg-base-100 rounded-box shadow-md">
             {% for chap in chapters %}
-                {% for c,l in chap.items %}
-                    <li class="list-row">
-                        <div>
-                            <a class="link" href={{ c }}>{{ l }}</a>
-                        </div>
-                    </li>
-                {% endfor %}
+                <li class="list-row">
+                    <div>
+                        <a class="link" href={{ chap.slug }}>{{ chap.title }}</a>
+                    </div>
+                </li>
             {% endfor %}
         </ul>
     {% endif %}
 {% endblock content %}
+{% block extra_head %}
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Book",
+  "name": "{{ manga.title|escapejs }}",
+  "image": "{{ manga.image_url }}",
+  "author": "{{ manga.author|default:'Unknown'|escapejs }}",
+  "genre": {{ manga.genre|safe }},
+  "datePublished": "{{ manga.year }}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "MangaFoxy"
+  }
+}
+    </script>
+{% endblock extra_head %}

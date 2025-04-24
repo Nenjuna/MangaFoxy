@@ -1,0 +1,66 @@
+{% extends "./base/base.html" %}
+{% block title %}
+    {{ manga.title }} - {{ chapter.title }} - Read Free Manga Chapters | MangaFoxy
+{% endblock title %}
+{% block content %}
+    {% comment %} <h1 class="card-title text-xl sm:text-2xl font-bold text-base-content">{{ manga.title }} - {{ chapter.title }}</h1> {% endcomment %}
+    <div class="text-sm breadcrumbs mb-4">
+        <ul>
+            <li>
+                <a href="{% url 'home' %}" class="link link-hover">Home</a>
+            </li>
+            <li>
+                <a href="{% url 'manga-detail' manga.slug %}" class="link link-hover">{{ manga.title }}</a>
+            </li>
+            <li>{{ chapter.title }}</li>
+        </ul>
+    </div>
+    <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold">{{ manga.title }}</h1>
+        <h2 class="text-lg text-secondary">{{ chapter.title }}</h2>
+    </div>
+    <div class="flex justify-between items-center mb-6">
+        {% if prev_chapter %}
+            <a href="{% url 'chapter_detail' manga.slug prev_chapter.slug %}"
+               class="btn btn-outline btn-sm">← Previous</a>
+        {% else %}
+            <button class="btn btn-sm btn-disabled">← Previous</button>
+        {% endif %}
+        {% if next_chapter %}
+            <a href="{% url 'chapter_detail' manga.slug next_chapter.slug %}"
+               class="btn btn-outline btn-sm">Next →</a>
+        {% else %}
+            <button class="btn btn-sm btn-disabled">Next →</button>
+        {% endif %}
+    </div>
+    {% if chapter.image_urls %}
+        <div class="flex flex-col gap-6">
+            {% for img in chapter.image_urls %}
+                <div class="card shadow-md bg-base-100">
+                    <figure>
+                        <img src="{{ img }}"
+                             alt="Page {{ forloop.counter }}"
+                             loading="lazy"
+                             class="w-full" />
+                    </figure>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No images available for this chapter.</p>
+    {% endif %}
+    <div class="flex justify-between items-center mt-10">
+        {% if prev_chapter %}
+            <a href="{% url 'chapter_detail' manga.slug prev_chapter.slug %}"
+               class="btn btn-outline btn-sm">← Previous</a>
+        {% else %}
+            <button class="btn btn-sm btn-disabled">← Previous</button>
+        {% endif %}
+        {% if next_chapter %}
+            <a href="{% url 'chapter_detail' manga.slug next_chapter.slug %}"
+               class="btn btn-outline btn-sm">Next →</a>
+        {% else %}
+            <button class="btn btn-sm btn-disabled">Next →</button>
+        {% endif %}
+    </div>
+{% endblock content %}

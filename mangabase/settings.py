@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'mangabase',
     'manga',
+    'django.contrib.sitemaps'
 ]
 
 MIDDLEWARE = [

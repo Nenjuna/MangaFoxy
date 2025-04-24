@@ -17,11 +17,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from django.contrib import sitemaps
+from django.contrib.sitemaps.views import sitemap
+from manga.sitemaps import StaticViewSitemap, MangaSitemap
+
+
+sitemaps_dict = {
+    'static': StaticViewSitemap,
+    'manga': MangaSitemap,
+}
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
     path('', views.home, name='home'),
-    path('<slug:slug>/', views.manga_detail_view, name='manga-detail'),
     path('api/', include('manga.urls')),
+    path('<slug:slug>/', views.manga_detail_view, name='manga-detail'),
+    path('<slug:manga_slug>/<slug:chapter_number>/', views.chapter_detail_view, name='chapter_detail'),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps_dict}, name='django.contrib.sitemaps.views.sitemap'),
 ]

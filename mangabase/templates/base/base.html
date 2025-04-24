@@ -4,27 +4,38 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         {% load static %}
-        <link href="{% static 'css/output.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'css/output.css' %}"
+              rel="stylesheet"
+              type="text/css"
+              rel="preload"
+              as="style" />
+        <!-- SEO Meta -->
+        <meta name="description"
+              content="{% block meta_description %}Read free manga online - updated daily.{% endblock meta_description %}">
+        <meta name="keywords"
+              content="{% block meta_keywords %}free manga, manga reader, read manga online{% endblock meta_keywords %}">
+        <meta name="author" content="MangaFoxy">
+        <!-- Robots -->
+        <meta name="robots" content="index, follow">
         <title>
             {% block title %}
                 MangaFoxy
             {% endblock title %}
         </title>
+        {% block extra_head %}
+        {% endblock extra_head %}
     </head>
     <body>
-        <div class="navbar bg-base-100 shadow-sm mx-auto">
-            <a class="btn btn-ghost text-xl" href="/">MangaFoxy.com</a>
+        <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+            <div class="container mx-auto px-4 flex justify-center md:justify-between items-center">
+                <a class="btn btn-ghost normal-case text-xl" href="/">MangaFoxy.com</a>
+                <!-- Add menu or links here -->
+            </div>
         </div>
         <main class="container mx-auto p-5">
             {% block content %}
             {% endblock content %}
         </main>
-        {% comment %} <footer class="bg-white rounded-lg shadow-sm m-4 dark:bg-gray-800">
-            <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-                <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025 <a href="/" class="hover:underline">MangaFoxy.com™</a>. All Rights Reserved.
-                </span>
-            </div>
-        </footer> {% endcomment %}
         <footer class="footer sm:footer-horizontal footer-center bg-base-300 text-base-content p-4">
             <aside>
                 <p>Copyright © {% now "Y" %} - All right reserved by MANGAFOXY.COM</p>

@@ -1,6 +1,17 @@
 from django.db import models
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
+import re
+
+
+#Function to extact Chapter number
+def extract_chapter_number(title):
+    match = re.search(r'chapter\s*([\d.]+)', title, re.IGNORECASE)
+    if match:
+        return match.group(1)
+    # fallback: get any number
+    match = re.search(r'([\d.]+)', title)
+    return match.group(1) if match else None
 
 
 class Manga(models.Model):
@@ -60,9 +71,16 @@ class Chapter(models.Model):
     slug = models.SlugField()
     image_urls = models.JSONField(default=list, blank=True, null=True)  # Store image URLs as a list
     created_at = models.DateTimeField(auto_now_add=True)
+    mangaowl_url = models.URLField(blank=True, null=True)
 
     class Meta:
         unique_together = ('manga', 'chapter_number')
+
+    def save(self, *args, **kwargs):
+        if not self.chapter_number:
+            self.chapter_number = extract_chapter_number(self.title) or "0"
+        self.slug = slugify(f"{self.title}")
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.manga.title} - {self.title}"
