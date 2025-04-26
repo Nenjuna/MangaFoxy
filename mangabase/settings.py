@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-4b*3zixms@^e_e&y6=fe4*je^j#j533)rwxz28p7^keib+seoj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['mangafoxy.com']
 
 db_pass = os.environ.get('DB_PASS')
 
