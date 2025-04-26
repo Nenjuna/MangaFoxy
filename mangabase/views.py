@@ -115,12 +115,12 @@ def chapter_detail_view(request, manga_slug, chapter_number):
     chapter = get_object_or_404(Chapter, manga=manga, slug=chapter_number)
 
     if not chapter.image_urls:
-        print("No image URLs found in DB — scraping...")
+        print("No image URLs found")
         image_urls = scrape_images(chapter.mangaowl_url)
         chapter.image_urls = image_urls
         chapter.save(update_fields=['image_urls'])
     else:
-        print("Image already exist — skipping scrape")
+        print("Image already exist")
 
     next_chapter = manga.chapters.filter(chapter_number__gt=chapter.chapter_number).order_by('chapter_number').first()
     prev_chapter = manga.chapters.filter(chapter_number__lt=chapter.chapter_number).order_by('-chapter_number').first()
