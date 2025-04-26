@@ -35,7 +35,7 @@ def save_chapters(manga, scraped_data):
             )
 
             if created:
-                print(f"✅ New Chapter saved: {chapter}")
+                print(f"New Chapter saved: {chapter}")
 
 def scrape_chapter(slug):
     url = "https://mangaowl.io/read-1/" + slug + "/ajax/chapters/"
@@ -86,11 +86,11 @@ def manga_detail_view(request, slug):
 
 
     if not manga.chapters.exists():
-        print("🔎 No chapters found in DB — scraping...")
+        print("No chapters found in DB — scraping...")
         scraped_chapters = scrape_chapter(slug)
         save_chapters(manga, scraped_chapters)
     else:
-        print("✅ Chapters already exist — skipping scrape")
+        print("Chapters already exist — skipping scrape")
 
     chapters = manga.chapters.order_by('-chapter_number')
     
@@ -115,12 +115,12 @@ def chapter_detail_view(request, manga_slug, chapter_number):
     chapter = get_object_or_404(Chapter, manga=manga, slug=chapter_number)
 
     if not chapter.image_urls:
-        print("🔎 No image URLs found in DB — scraping...")
+        print("No image URLs found in DB — scraping...")
         image_urls = scrape_images(chapter.mangaowl_url)
         chapter.image_urls = image_urls
         chapter.save(update_fields=['image_urls'])
     else:
-        print("✅ Image already exist — skipping scrape")
+        print("Image already exist — skipping scrape")
 
     next_chapter = manga.chapters.filter(chapter_number__gt=chapter.chapter_number).order_by('chapter_number').first()
     prev_chapter = manga.chapters.filter(chapter_number__lt=chapter.chapter_number).order_by('-chapter_number').first()
