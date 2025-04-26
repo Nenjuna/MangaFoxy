@@ -86,11 +86,11 @@ def manga_detail_view(request, slug):
 
 
     if not manga.chapters.exists():
-        print("No chapters found in DB — scraping...")
+        # print("No chapters found in DB — scraping...")
         scraped_chapters = scrape_chapter(slug)
         save_chapters(manga, scraped_chapters)
     else:
-        print("Chapters already exist — skipping scrape")
+        print("Chapters already exist")
 
     chapters = manga.chapters.order_by('-chapter_number')
     
