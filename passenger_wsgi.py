@@ -1,0 +1,1 @@
+from mangabase.wsgi import application
