@@ -134,18 +134,18 @@
 {% endblock content %}
 {% block extra_head %}
     <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Book",
-  "name": "{{ manga.title|escapejs }}",
-  "image": "{{ manga.image_url }}",
-  "author": "{{ manga.author|default:'Unknown'|escapejs }}",
-  "genre": {{ manga.genre|safe }},
-  "datePublished": "{{ manga.year }}",
-  "publisher": {
-    "@type": "Organization",
-    "name": "MangaFoxy"
-  }
-}
+        {
+        "@context": "https://schema.org",
+        "@type": "Book",
+        "name": "{{ manga.title|escapejs }}",
+        "image": "{{ manga.image_url }}",
+        "author": "{{ manga.author|default:'Unknown'|escapejs }}",
+        "genre": {{ genre_json|safe }},
+        "datePublished": "{{ manga.year }}",
+        "publisher": {
+            "@type": "Organization",
+            "name": "MangaFoxy"
+        }
+        }
     </script>
 {% endblock extra_head %}

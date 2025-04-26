@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-4b*3zixms@^e_e&y6=fe4*je^j#j533)rwxz28p7^keib+seoj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mangafoxy.com']
+ALLOWED_HOSTS = []
 
 db_pass = os.environ.get('DB_PASS')
 
@@ -81,17 +81,23 @@ WSGI_APPLICATION = 'mangabase.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'manglevi_django-test',
+#         'USER': 'manglevi_django',
+#         'PASSWORD': db_pass,
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'manglevi_django-test',
-        'USER': 'manglevi_django',
-        'PASSWORD': db_pass,
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

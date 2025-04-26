@@ -2,6 +2,12 @@
 {% block title %}
     {{ manga.title }} - {{ chapter.title }} - Read Free Manga Chapters | MangaFoxy
 {% endblock title %}
+{% block meta_description %}
+    {{ meta_description }}
+{% endblock meta_description %}
+{% block meta_keywords %}
+    {{ meta_keywords }}
+{% endblock meta_keywords %}
 {% block content %}
     {% comment %} <h1 class="card-title text-xl sm:text-2xl font-bold text-base-content">{{ manga.title }} - {{ chapter.title }}</h1> {% endcomment %}
     <div class="text-sm breadcrumbs mb-4">

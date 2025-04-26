@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Case, When, Value, IntegerField
 from django.utils.text import slugify
 from django.core.paginator import Paginator
-
+import json
 from manga.models import Manga, Chapter
 import requests
 import re
@@ -65,7 +66,15 @@ def scrape_images(chapter_url):
 
 # Home page 
 def home(request):
-    mangas = Manga.objects.all().order_by('title')
+    # mangas = Manga.objects.all().order_by('title')
+    mangas = Manga.objects.annotate(
+        has_image=Case(
+            When(image_url__isnull=False, then=Value(1)),
+            default=Value(0),
+            output_field=IntegerField()
+        )
+    ).order_by('-has_image', 'title')    
+    
     paginator = Paginator(mangas, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -87,7 +96,14 @@ def manga_detail_view(request, slug):
     
 
 
-    return render(request, 'manga_detail.html', {'manga': manga, 'chapters': chapters, 'meta_description': f"Read {manga.title} online, updated daily.",'meta_keywords': ', '.join(manga.genre),})
+    return render(request, 'manga_detail.html', 
+                  {
+                'manga': manga, 
+                'chapters': chapters, 
+                'meta_description': f"Read {manga.title} online, updated daily.",
+                'meta_keywords': ', '.join(manga.genre),
+                'genre_json': json.dumps(manga.genre),
+        })
 
 # Chapter Detail View
 def chapter_detail_view(request, manga_slug, chapter_number):
@@ -115,4 +131,7 @@ def chapter_detail_view(request, manga_slug, chapter_number):
         'chapter': chapter,
         'next_chapter': next_chapter,
         'prev_chapter': prev_chapter,
+        'meta_description': f"Read {manga.title} {chapter.title} online. Updated daily on MangaFoxy.",
+        'meta_keywords' : ', '.join(manga.genre + [manga.title, chapter.title]),
+
     })

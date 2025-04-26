@@ -20,6 +20,9 @@ from . import views
 from django.contrib import sitemaps
 from django.contrib.sitemaps.views import sitemap
 from manga.sitemaps import StaticViewSitemap, MangaSitemap
+from django.views.generic import TemplateView
+
+
 
 
 sitemaps_dict = {
@@ -35,4 +38,5 @@ urlpatterns = [
     path('<slug:slug>/', views.manga_detail_view, name='manga-detail'),
     path('<slug:manga_slug>/<slug:chapter_number>/', views.chapter_detail_view, name='chapter_detail'),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps_dict}, name='django.contrib.sitemaps.views.sitemap'),
+    path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
 ]
