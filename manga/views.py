@@ -1,4 +1,5 @@
 # manga/views.py
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -67,3 +68,29 @@ def chapter_list_create(request):
             serializer.save()  # Calls your model's save method (auto-slug etc.)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+def chapter_detail_update_delete(request, pk):
+    """
+    GET: Retrieve a chapter
+    PUT/PATCH: Update a chapter
+    DELETE: Delete a chapter
+    """
+    chapter = get_object_or_404(Chapter, pk=pk)
+
+    if request.method == 'GET':
+        serializer = ChapterSerializer(chapter)
+        return Response(serializer.data)
+
+    elif request.method in ['PUT', 'PATCH']:
+        serializer = ChapterSerializer(chapter, data=request.data, partial=(request.method == 'PATCH'))
+        if serializer.is_valid():
+            serializer.save()  # Calls model's save method (keeps slug logic)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        chapter.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
