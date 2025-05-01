@@ -106,8 +106,15 @@
                     </div>
                 </section>
                 <!-- Button -->
-                <div class="card-actions mt-auto pt-4">
-                    <a href="#" class="btn btn-primary w-full sm:w-auto">Read Now</a>
+                <div class="flex gap-4 my-4">
+                    {% if first_chapter %}
+                        <a href="{% url 'chapter_detail' manga.slug first_chapter.slug %}"
+                           class="btn btn-neutral">Start Reading</a>
+                    {% endif %}
+                    {% if latest_chapter %}
+                        <a href="{% url 'chapter_detail' manga.slug latest_chapter.slug %}"
+                           class="btn btn-neutral">Latest Chapter</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

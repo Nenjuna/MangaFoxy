@@ -56,9 +56,17 @@ def scrape_chapter(slug):
 
 def scrape_images(chapter_url):
     chapter_html = requests.get(chapter_url, headers=header)
+    print(chapter_url)
+    # print(chapter_html.text)
     chapter_soup  = BeautifulSoup(chapter_html.text, 'lxml')
     links_group = chapter_soup.select("div.page-break.no-gaps")
-    img_links = [i.img['data-src'].strip() for i in links_group]
+    img_links = []
+    for i in links_group:
+        img_tag = i.img
+        if img_tag:
+            src = img_tag.get('data-src') or img_tag.get('src')
+            if src:
+                img_links.append(src.strip())
     # print(img_links)
     return img_links
 
@@ -95,6 +103,10 @@ def manga_detail_view(request, slug):
 
     chapters = manga.chapters.annotate(chapter_number_float=Cast('chapter_number', FloatField())).order_by('-chapter_number_float')    
 
+    first_chapter = chapters.last()  # lowest chapter number
+    latest_chapter = chapters.first()  # highest chapter number
+
+
 
     return render(request, 'manga_detail.html', 
                   {
@@ -103,6 +115,8 @@ def manga_detail_view(request, slug):
                 'meta_description': f"Read {manga.title} online, updated daily.",
                 'meta_keywords': ', '.join(manga.genre),
                 'genre_json': json.dumps(manga.genre),
+                'first_chapter': first_chapter,
+                'latest_chapter': latest_chapter,
         })
 
 # Chapter Detail View
