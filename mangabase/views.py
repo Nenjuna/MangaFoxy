@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Case, When, Value, IntegerField, Q
+from django.db.models import Case, When, Value, IntegerField, Q, FloatField
+from django.db.models.functions import Cast
 from django.utils.text import slugify
 from django.core.paginator import Paginator
 import json
@@ -92,8 +93,7 @@ def manga_detail_view(request, slug):
     else:
         print("Chapters already exist")
 
-    chapters = manga.chapters.order_by('-chapter_number')
-    
+    chapters = manga.chapters.annotate(chapter_number_float=Cast('chapter_number', FloatField())).order_by('-chapter_number_float')    
 
 
     return render(request, 'manga_detail.html', 
@@ -133,5 +133,4 @@ def chapter_detail_view(request, manga_slug, chapter_number):
         'prev_chapter': prev_chapter,
         'meta_description': f"Read {manga.title} {chapter.title} online. Updated daily on MangaFoxy.",
         'meta_keywords' : ', '.join(manga.genre + [manga.title, chapter.title]),
-
     })
