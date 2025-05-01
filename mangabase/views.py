@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Case, When, Value, IntegerField
+from django.db.models import Case, When, Value, IntegerField, Q
 from django.utils.text import slugify
 from django.core.paginator import Paginator
 import json
@@ -69,7 +69,7 @@ def home(request):
     # mangas = Manga.objects.all().order_by('title')
     mangas = Manga.objects.annotate(
         has_image=Case(
-            When(image_url__isnull=False, then=Value(1)),
+            When(~Q(image_url__isnull=True) & ~Q(image_url=''), then=Value(1)),
             default=Value(0),
             output_field=IntegerField()
         )
