@@ -40,7 +40,7 @@
                     {% endif %}
                     {% if manga.genre %}
                         <div class="flex items-start gap-2 flex-wrap">
-                            <strong class="text-base-content">Genres:</strong>
+                            <strong class="font-medium text-base-content">Genres:</strong>
                             <ul class="flex flex-wrap gap-2 list-none m-0 p-0">
                                 {% for g in manga.genre %}
                                     <li>
@@ -104,6 +104,12 @@
                             </div>
                         {% endif %}
                     </div>
+                    {% if manga.view_count %}
+                        <div class="flex items-center gap-2">
+                            <strong class="font-medium text-base-content">Views:</strong>
+                            <span class="font-semibold">{{ manga.view_count }}</span>
+                        </div>
+                    {% endif %}
                 </section>
                 <!-- Button -->
                 <div class="flex gap-4 my-4">

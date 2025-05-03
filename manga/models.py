@@ -1,6 +1,10 @@
 from django.db import models
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.utils.timezone import now
+
 import re
 
 
@@ -62,6 +66,17 @@ class Manga(models.Model):
 
     def __str__(self):
         return self.title
+    
+    @property
+    def view_count(self):
+        content_type = ContentType.objects.get_for_model(self)
+        return ViewLog.objects.filter(content_type=content_type, object_id=self.id).count()
+    
+    @property
+    def unique_view_count(self):
+        content_type = ContentType.objects.get_for_model(self)
+        return ViewLog.objects.filter(content_type=content_type, object_id=self.id).values('session_id', 'ip_address').distinct().count()
+
 
 class Chapter(models.Model):
     manga = models.ForeignKey(Manga, related_name='chapters', on_delete=models.CASCADE)
@@ -84,3 +99,34 @@ class Chapter(models.Model):
 
     def __str__(self):
         return f"{self.manga.title} - {self.title}"
+    
+    @property
+    def view_count(self):
+        content_type = ContentType.objects.get_for_model(self)
+        return ViewLog.objects.filter(content_type=content_type, object_id=self.id).count()
+    
+    @property
+    def unique_view_count(self):
+        content_type = ContentType.objects.get_for_model(self)
+        return ViewLog.objects.filter(content_type=content_type, object_id=self.id).values('session_id', 'ip_address').distinct().count()
+    
+
+
+class ViewLog(models.Model):
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    session_id = models.CharField(max_length=100, null=True, blank=True)
+    timestamp = models.DateTimeField(default=now)
+
+    # Generic relation to Manga or Chapter
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['content_type', 'object_id', 'timestamp']),
+        ]
+        # unique_together = ('content_type', 'object_id', 'ip_address', 'session_id')
+
+    def __str__(self):
+        return f"{self.content_object} viewed at {self.timestamp}"

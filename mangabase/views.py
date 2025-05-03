@@ -1,13 +1,17 @@
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Case, When, Value, IntegerField, Q, FloatField
+from django.db.models import Case, When, Value, IntegerField, Q, FloatField, F, Count, OuterRef, Subquery
 from django.db.models.functions import Cast
 from django.utils.text import slugify
 from django.core.paginator import Paginator
 import json
-from manga.models import Manga, Chapter
+from manga.models import Manga, Chapter, ViewLog
+from django.contrib.contenttypes.models import ContentType
+
 import requests
 import re
 from bs4 import BeautifulSoup
+from .session_logger import log_view
+
 
 header = {'User-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36'}
 
@@ -76,13 +80,23 @@ def scrape_images(chapter_url):
 # Home page 
 def home(request):
     # mangas = Manga.objects.all().order_by('title')
+    manga_ct = ContentType.objects.get_for_model(Manga)
+
+    view_count_subquery = ViewLog.objects.filter(
+            content_type=manga_ct,
+            object_id=OuterRef('pk')
+        ).values('object_id').annotate(
+            view_count=Count('id')
+        ).values('view_count')
+
     mangas = Manga.objects.annotate(
+        total_views=Subquery(view_count_subquery, output_field=IntegerField()),
         has_image=Case(
             When(~Q(image_url__isnull=True) & ~Q(image_url=''), then=Value(1)),
             default=Value(0),
             output_field=IntegerField()
         )
-    ).order_by('-has_image', 'title')    
+    ).order_by('-total_views', '-has_image', 'title')   
     
     paginator = Paginator(mangas, 20)
     page_number = request.GET.get('page')
@@ -105,6 +119,9 @@ def manga_detail_view(request, slug):
 
     first_chapter = chapters.last()  # lowest chapter number
     latest_chapter = chapters.first()  # highest chapter number
+
+    log_view(request, manga) #logging manga details
+
 
 
 
@@ -138,6 +155,8 @@ def chapter_detail_view(request, manga_slug, chapter_number):
 
     next_chapter = manga.chapters.filter(chapter_number__gt=chapter.chapter_number).order_by('chapter_number').first()
     prev_chapter = manga.chapters.filter(chapter_number__lt=chapter.chapter_number).order_by('-chapter_number').first()
+
+    log_view(request, chapter) #logging for chapter
 
     # Pass the chapter to the template
     return render(request, 'chapter_detail.html', {
