@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Case, When, Value, IntegerField, Q, FloatField, F, Count, OuterRef, Subquery
+from django.db.models import Case, When, Value, IntegerField, Q, FloatField
 from django.db.models.functions import Cast
 from django.utils.text import slugify
 from django.core.paginator import Paginator
 import json
-from manga.models import Manga, Chapter, ViewLog
-from django.contrib.contenttypes.models import ContentType
+from manga.models import Manga, Chapter
+
 
 import requests
 import re
@@ -79,24 +79,14 @@ def scrape_images(chapter_url):
 
 # Home page 
 def home(request):
-    # mangas = Manga.objects.all().order_by('title')
-    manga_ct = ContentType.objects.get_for_model(Manga)
-
-    view_count_subquery = ViewLog.objects.filter(
-            content_type=manga_ct,
-            object_id=OuterRef('pk')
-        ).values('object_id').annotate(
-            view_count=Count('id')
-        ).values('view_count')
-
     mangas = Manga.objects.annotate(
-        total_views=Subquery(view_count_subquery, output_field=IntegerField()),
+        # total_views=Subquery(view_count_subquery, output_field=IntegerField()),
         has_image=Case(
             When(~Q(image_url__isnull=True) & ~Q(image_url=''), then=Value(1)),
             default=Value(0),
             output_field=IntegerField()
         )
-    ).order_by('-total_views', '-has_image', 'title')   
+    ).order_by('-view_count', '-has_image', 'title')   
 
 
     

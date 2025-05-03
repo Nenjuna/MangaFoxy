@@ -59,6 +59,8 @@ class Manga(models.Model):
 
     last_scraped = models.DateTimeField(null=True, blank=True)
 
+    view_count = models.PositiveIntegerField(default=0)
+
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -68,10 +70,10 @@ class Manga(models.Model):
     def __str__(self):
         return self.title
     
-    @property
-    def view_count(self):
-        content_type = ContentType.objects.get_for_model(self)
-        return ViewLog.objects.filter(content_type=content_type, object_id=self.id).count()
+    # @property
+    # def view_count(self):
+    #     content_type = ContentType.objects.get_for_model(self)
+    #     return ViewLog.objects.filter(content_type=content_type, object_id=self.id).count()
     
     @property
     def unique_view_count(self):
@@ -94,6 +96,7 @@ class Chapter(models.Model):
     image_urls = models.JSONField(default=list, blank=True, null=True)  # Store image URLs as a list
     created_at = models.DateTimeField(auto_now_add=True)
     mangaowl_url = models.URLField(blank=True, null=True)
+    view_count = models.PositiveIntegerField(default=0)
 
     class Meta:
         unique_together = ('manga', 'chapter_number')
@@ -107,10 +110,10 @@ class Chapter(models.Model):
     def __str__(self):
         return f"{self.manga.title} - {self.title}"
     
-    @property
-    def view_count(self):
-        content_type = ContentType.objects.get_for_model(self)
-        return ViewLog.objects.filter(content_type=content_type, object_id=self.id).count()
+    # @property
+    # def view_count(self):
+    #     content_type = ContentType.objects.get_for_model(self)
+    #     return ViewLog.objects.filter(content_type=content_type, object_id=self.id).count()
     
     @property
     def unique_view_count(self):
