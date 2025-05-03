@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils.timezone import now
+from django.templatetags.static import static
 
 import re
 
@@ -76,6 +77,12 @@ class Manga(models.Model):
     def unique_view_count(self):
         content_type = ContentType.objects.get_for_model(self)
         return ViewLog.objects.filter(content_type=content_type, object_id=self.id).values('session_id', 'ip_address').distinct().count()
+    
+    @property
+    def thumbnail_url(self):
+        if self.image_url and self.image_url.strip() != "":
+            return self.image_url
+        return static('images/no-thumbnail.png')
 
 
 class Chapter(models.Model):

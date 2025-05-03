@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - source /home/manglevi/virtualenv/repositories/MangaFoxy/3.9/bin/activate && cd /home/manglevi/repositories/MangaFoxy
+    - python manage.py collectstatic --noinput
+    - python manage.py migrate

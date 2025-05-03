@@ -97,6 +97,8 @@ def home(request):
             output_field=IntegerField()
         )
     ).order_by('-total_views', '-has_image', 'title')   
+
+
     
     paginator = Paginator(mangas, 20)
     page_number = request.GET.get('page')
