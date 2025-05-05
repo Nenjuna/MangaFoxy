@@ -1,11 +1,13 @@
 <li class="list-row flex flex-col">
-    <div>
-        <img class="mx-auto rounded-box object-cover w-full h-40 sm:h-48 lg:h-56"
+    <div class="aspect-w-16 aspect-h-9">
+        <img class="mx-auto rounded-box object-cover h-40 sm:h-56 lg:h-56 w-full"
              src="{{ manga.thumbnail_url }}"
              alt="{{ manga.title }}"
-             loading="lazy" />
+             loading="lazy"
+             width="800"
+             height="600" />
     </div>
-    <div class="mt-auto pt-4">
+    <div>
         <div>
             <a class="link" href={{ manga.slug }}>{{ manga.title }}</a>
         </div>
