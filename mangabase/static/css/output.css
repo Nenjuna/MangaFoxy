@@ -723,9 +723,6 @@
   .mt-10 {
     margin-top: calc(var(--spacing) * 10);
   }
-  .mt-auto {
-    margin-top: auto;
-  }
   .breadcrumbs {
     max-width: 100%;
     overflow-x: auto;
@@ -898,12 +895,6 @@
       flex-grow: 1;
     }
   }
-  .card-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: calc(0.25rem * 2);
-  }
   .card-title {
     display: flex;
     align-items: center;
@@ -998,17 +989,8 @@
   .h-3 {
     height: calc(var(--spacing) * 3);
   }
-  .h-60 {
-    height: calc(var(--spacing) * 60);
-  }
-  .h-auto {
-    height: auto;
-  }
   .h-full {
     height: 100%;
-  }
-  .max-h-72 {
-    max-height: calc(var(--spacing) * 72);
   }
   .w-3 {
     width: calc(var(--spacing) * 3);
@@ -1148,9 +1130,6 @@
   .py-0\.5 {
     padding-block: calc(var(--spacing) * 0.5);
   }
-  .pt-4 {
-    padding-top: calc(var(--spacing) * 4);
-  }
   .pb-2 {
     padding-bottom: calc(var(--spacing) * 2);
   }
@@ -1276,10 +1255,6 @@
     --btn-color: var(--color-neutral);
     --btn-fg: var(--color-neutral-content);
   }
-  .btn-primary {
-    --btn-color: var(--color-primary);
-    --btn-fg: var(--color-primary-content);
-  }
   .\*\:\[grid-area\:1\/1\] {
     :is(& > *) {
       grid-area: 1/1;
@@ -1298,11 +1273,6 @@
   .sm\:w-2\/3 {
     @media (width >= 40rem) {
       width: calc(2/3 * 100%);
-    }
-  }
-  .sm\:w-auto {
-    @media (width >= 40rem) {
-      width: auto;
     }
   }
   .sm\:footer-horizontal {

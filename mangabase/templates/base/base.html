@@ -9,6 +9,13 @@
               type="text/css"
               rel="preload"
               as="style" />
+        <link rel="preload"
+              href="{% static 'css/output.css' %}"
+              as="style"
+              onload="this.onload=null;this.rel='stylesheet'">
+        <noscript>
+            <link rel="stylesheet" href="{% static 'css/output.css' %}">
+        </noscript>
         <!-- SEO Meta -->
         <meta name="description"
               content="{% block meta_description %}Read free manga online - updated daily.{% endblock meta_description %}">
