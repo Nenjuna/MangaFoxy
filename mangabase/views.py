@@ -90,7 +90,7 @@ def home(request):
 
 
     
-    paginator = Paginator(mangas, 20)
+    paginator = Paginator(mangas, 32)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'index.html', {'mangas': page_obj})
