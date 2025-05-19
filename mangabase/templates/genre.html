@@ -27,7 +27,7 @@
   <div class="container mx-auto px-4 py-8">
     <!-- Genre List -->
     <section aria-labelledby="genre-heading" class="mb-8">
-      <h1 id="genre-heading" class="text-2xl font-bold mb-4">
+      <h1 id="genre-heading" class="text-3xl font-bold mb-4 text-base-content">
         {% if selected_genre %}
           {{ selected_genre }} Manga
         {% else %}
@@ -49,7 +49,7 @@
     <!-- Manga Grid -->
     <section aria-labelledby="manga-heading">
       {% if selected_genre %}
-        <h2 id="manga-heading" class="text-xl font-semibold mb-4">Popular {{ selected_genre }} Manga</h2>
+        <h2 id="manga-heading" class="text-2xl font-semibold mb-4 text-base-content">Popular {{ selected_genre }} Manga</h2>
       {% endif %}
       
       <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" role="list">
