@@ -148,19 +148,52 @@
     {% endif %}
 {% endblock content %}
 {% block extra_head %}
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+    <!-- Open Graph Metadata -->
+    <meta property="og:type" content="book" />
+    <meta property="og:title" content="{{ manga.title }} | MangaFoxy" />
+    <meta property="og:description"
+          content="{{ manga.summary|truncatewords:40|striptags }}" />
+    <meta property="og:image" content="{{ manga.thumbnail_url }}" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:site_name" content="MangaFoxy" />
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ manga.title }} | MangaFoxy" />
+    <meta name="twitter:description"
+          content="{{ manga.summary|truncatewords:40|striptags }}" />
+    <meta name="twitter:image" content="{{ manga.thumbnail_url }}" />
+    <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
-        {
-        "@context": "https://schema.org",
-        "@type": "Book",
-        "name": "{{ manga.title|escapejs }}",
-        "image": "{{ manga.image_url }}",
-        "author": "{{ manga.author|default:'Unknown'|escapejs }}",
-        "genre": {{ genre_json|safe }},
-        "datePublished": "{{ manga.year }}",
-        "publisher": {
-            "@type": "Organization",
-            "name": "MangaFoxy"
-        }
-        }
+    {
+      "@context": "https://schema.org",
+      "@type": "Book",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ request.build_absolute_uri }}"
+      },
+      "name": "{{ manga.title|escapejs }}",
+      "image": "{{ manga.thumbnail_url }}",
+      "url": "{{ request.build_absolute_uri }}",
+      "author": {
+        "@type": "Person",
+        "name": "{{ manga.author|default:'Unknown'|escapejs }}"
+      },
+      "genre": {{ genre_json|safe }},
+      "description": "{{ manga.summary|truncatewords:50|striptags|escapejs }}",
+      "datePublished": "{{ manga.year }}",
+      "publisher": {
+        "@type": "Organization",
+        "name": "MangaFoxy"
+      }{% if manga.rating %},
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "{{ manga.rating }}",
+        "bestRating": "5",
+        "ratingCount": "{{ manga.view_count|default:'100' }}"
+      }
+      {% endif %}
+    }
     </script>
 {% endblock extra_head %}

@@ -9,8 +9,8 @@
   read manga online, free manga, manga online, manga reader, latest manga chapters, popular manga, mangafox alternative, manga scanlations, manga updates, english manga, manga website, best manga site, manga list, new manga, manga chapters online
 {% endblock meta_keywords %}
 {% block content %}
-  <h2 class="text-xs p-4 pb-2 opacity-60">All Manga Titles</h2>
-  <ul class="grid sm:grid-cols-4 grid-cols-2 gap-4 p-4 list bg-base-100 rounded-box shadow-md">
+  <h2 class="text-sm p-4 pb-2 text-base-content/60">All Manga Titles</h2>
+  <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 rounded-box shadow-md list bg-base-100">
     {% for manga in mangas %}
       {% include "./components/manga_card.html" with manga=manga %}
     {% empty %}
