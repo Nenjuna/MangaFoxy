@@ -126,6 +126,7 @@ class ViewLog(models.Model):
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     session_id = models.CharField(max_length=100, null=True, blank=True)
     timestamp = models.DateTimeField(default=now)
+    processed = models.BooleanField(default=False)
 
     # Generic relation to Manga or Chapter
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -135,6 +136,8 @@ class ViewLog(models.Model):
     class Meta:
         indexes = [
             models.Index(fields=['content_type', 'object_id', 'timestamp']),
+            models.Index(fields=['processed']),
+            models.Index(fields=['timestamp'])
         ]
         # unique_together = ('content_type', 'object_id', 'ip_address', 'session_id')
 
