@@ -1,0 +1,93 @@
+{% extends "./base/base.html" %}
+{% block title %}
+  Copyright Policy - MangaFoxy
+{% endblock title %}
+
+{% block meta_description %}
+  Read MangaFoxy's copyright policy. Learn about our content usage guidelines, DMCA procedures, and how we respect intellectual property rights.
+{% endblock meta_description %}
+
+{% block meta_keywords %}
+  manga copyright, manga legal, manga policy, manga terms, manga rights, manga usage, manga guidelines, manga legal notice
+{% endblock meta_keywords %}
+
+{% block content %}
+  <section aria-labelledby="copyright-heading" class="container mx-auto px-4 py-8 max-w-4xl">
+    <h1 id="copyright-heading" class="text-3xl font-bold mb-6">Copyright Policy</h1>
+    
+    <article class="prose prose-lg">
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Intellectual Property Rights</h2>
+        <p>MangaFoxy respects intellectual property rights and expects users to do the same. All content on this website, including but not limited to manga titles, images, and text, is protected by copyright laws.</p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Content Usage</h2>
+        <p>The manga content available on MangaFoxy is provided for personal, non-commercial use only. Users may not:</p>
+        <ul class="list-disc pl-6 mt-2">
+          <li>Reproduce or distribute content without permission</li>
+          <li>Use content for commercial purposes</li>
+          <li>Modify or create derivative works</li>
+          <li>Remove copyright notices or watermarks</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">DMCA Policy</h2>
+        <p>If you believe that your copyrighted work has been used in a way that constitutes copyright infringement, please contact us with the following information:</p>
+        <ul class="list-disc pl-6 mt-2">
+          <li>Description of the copyrighted work</li>
+          <li>Location of the infringing material</li>
+          <li>Your contact information</li>
+          <li>Statement of good faith belief</li>
+          <li>Statement of accuracy under penalty of perjury</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Contact Information</h2>
+        <p>For copyright-related inquiries, please contact us at:</p>
+        <address class="not-italic mt-2">
+          Email: copyright@mangafoxy.com<br>
+          Subject: Copyright Infringement Notice
+        </address>
+      </section>
+    </article>
+  </section>
+{% endblock content %}
+
+{% block extra_head %}
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+  
+  <!-- Open Graph Metadata -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Copyright Policy - MangaFoxy" />
+  <meta property="og:description" content="Read MangaFoxy's copyright policy. Learn about our content usage guidelines, DMCA procedures, and how we respect intellectual property rights." />
+  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+  <meta property="og:site_name" content="MangaFoxy" />
+  
+  <!-- Twitter Card Metadata -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Copyright Policy - MangaFoxy" />
+  <meta name="twitter:description" content="Read MangaFoxy's copyright policy. Learn about our content usage guidelines, DMCA procedures, and how we respect intellectual property rights." />
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "{{ request.build_absolute_uri }}"
+    },
+    "name": "Copyright Policy - MangaFoxy",
+    "description": "Read MangaFoxy's copyright policy. Learn about our content usage guidelines, DMCA procedures, and how we respect intellectual property rights.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "MangaFoxy"
+    },
+    "url": "{{ request.build_absolute_uri }}"
+  }
+  </script>
+{% endblock extra_head %} 

@@ -1,7 +1,7 @@
-<li class="list-row flex flex-col"
+<article class="list-row flex flex-col"
     itemscope
     itemtype="https://schema.org/Book">
-    <div class="aspect-w-16 aspect-h-9">
+    <figure class="aspect-w-16 aspect-h-9">
         <img class="mx-auto rounded-box object-cover h-40 sm:h-56 lg:h-56 w-full"
              src="{{ manga.thumbnail_url }}"
              alt="{{ manga.title }}"
@@ -9,17 +9,17 @@
              width="800"
              height="600"
              itemprop="image" />
-    </div>
-    <div class="mt-2" itemprop="name">
+    </figure>
+    <header class="mt-2" itemprop="name">
         <a class="link" href="{{ manga.slug }}" itemprop="url">
             <h3 class="text-lg font-semibold">{{ manga.title }}</h3>
         </a>
-    </div>
-    <div class="text-xs uppercase font-semibold opacity-60"
+    </header>
+    <footer class="text-xs uppercase font-semibold opacity-60"
          itemprop="additionalProperty"
          itemscope
          itemtype="https://schema.org/PropertyValue">
         <meta itemprop="name" content="Status" />
         <span itemprop="value">{{ manga.status }}</span>
-    </div>
-</li>
+    </footer>
+</article>

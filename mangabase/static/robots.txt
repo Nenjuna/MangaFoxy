@@ -12,4 +12,4 @@ Disallow: /static/admin/
 Disallow: /media/
 
 # Sitemap
-Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml
+Sitemap: https://mangafoxy.com/sitemap.xml 

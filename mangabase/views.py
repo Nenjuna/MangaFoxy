@@ -11,9 +11,15 @@ import requests
 import re
 from bs4 import BeautifulSoup
 from .session_logger import log_view
+from django.http import Http404, HttpResponse
+from django.template.loader import render_to_string
+from django.utils import timezone
+from django.urls import reverse
 
 
-header = {'User-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36'}
+header = {
+    'User-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36'}
+
 
 def extract_chapter_number(title):
     match = re.search(r'chapter\s*([\d.]+)', title, re.IGNORECASE)
@@ -21,6 +27,7 @@ def extract_chapter_number(title):
         return match.group(1)
     match = re.search(r'([\d.]+)', title)
     return match.group(1) if match else "0"
+
 
 def save_chapters(manga, scraped_data):
     for entry in scraped_data:
@@ -42,6 +49,7 @@ def save_chapters(manga, scraped_data):
             if created:
                 print(f"New Chapter saved: {chapter}")
 
+
 def scrape_chapter(slug):
     url = "https://mangaowl.io/read-1/" + slug + "/ajax/chapters/"
     chapter_links = requests.post(url, headers=header)
@@ -58,11 +66,12 @@ def scrape_chapter(slug):
                 seen.add(url)
     return cleaned
 
+
 def scrape_images(chapter_url):
     chapter_html = requests.get(chapter_url, headers=header)
     print(chapter_url)
     # print(chapter_html.text)
-    chapter_soup  = BeautifulSoup(chapter_html.text, 'lxml')
+    chapter_soup = BeautifulSoup(chapter_html.text, 'lxml')
     links_group = chapter_soup.select("div.page-break.no-gaps")
     img_links = []
     for i in links_group:
@@ -75,9 +84,7 @@ def scrape_images(chapter_url):
     return img_links
 
 
-
-
-# Home page 
+# Home page
 def home(request):
     mangas = Manga.objects.annotate(
         # total_views=Subquery(view_count_subquery, output_field=IntegerField()),
@@ -86,19 +93,18 @@ def home(request):
             default=Value(0),
             output_field=IntegerField()
         )
-    ).order_by('-view_count', '-has_image', 'title')   
+    ).order_by('-view_count', '-has_image', 'title')
 
-
-    
     paginator = Paginator(mangas, 32)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'index.html', {'mangas': page_obj})
 
 # Manga Detail View
+
+
 def manga_detail_view(request, slug):
     manga = get_object_or_404(Manga, slug=slug)
-
 
     if not manga.chapters.exists():
         # print("No chapters found in DB — scraping...")
@@ -107,28 +113,28 @@ def manga_detail_view(request, slug):
     else:
         print("Chapters already exist")
 
-    chapters = manga.chapters.annotate(chapter_number_float=Cast('chapter_number', FloatField())).order_by('-chapter_number_float')    
+    chapters = manga.chapters.annotate(chapter_number_float=Cast(
+        'chapter_number', FloatField())).order_by('-chapter_number_float')
 
     first_chapter = chapters.last()  # lowest chapter number
     latest_chapter = chapters.first()  # highest chapter number
 
-    log_view(request, manga) #logging manga details
+    log_view(request, manga)  # logging manga details
 
-
-
-
-    return render(request, 'manga_detail.html', 
+    return render(request, 'manga_detail.html',
                   {
-                'manga': manga, 
-                'chapters': chapters, 
-                'meta_description': f"Read {manga.title} online, updated daily.",
-                'meta_keywords': ', '.join(manga.genre),
-                'genre_json': json.dumps(manga.genre),
-                'first_chapter': first_chapter,
-                'latest_chapter': latest_chapter,
-        })
+                      'manga': manga,
+                      'chapters': chapters,
+                      'meta_description': f"Read {manga.title} online, updated daily.",
+                      'meta_keywords': ', '.join(manga.genre),
+                      'genre_json': json.dumps(manga.genre),
+                      'first_chapter': first_chapter,
+                      'latest_chapter': latest_chapter,
+                  })
 
 # Chapter Detail View
+
+
 def chapter_detail_view(request, manga_slug, chapter_number):
     # Get the manga object by slug
     manga = get_object_or_404(Manga, slug=manga_slug)
@@ -145,10 +151,12 @@ def chapter_detail_view(request, manga_slug, chapter_number):
     else:
         print("Image already exist")
 
-    next_chapter = manga.chapters.filter(chapter_number__gt=chapter.chapter_number).order_by('chapter_number').first()
-    prev_chapter = manga.chapters.filter(chapter_number__lt=chapter.chapter_number).order_by('-chapter_number').first()
+    next_chapter = manga.chapters.filter(
+        chapter_number__gt=chapter.chapter_number).order_by('chapter_number').first()
+    prev_chapter = manga.chapters.filter(
+        chapter_number__lt=chapter.chapter_number).order_by('-chapter_number').first()
 
-    log_view(request, chapter) #logging for chapter
+    log_view(request, chapter)  # logging for chapter
 
     # Pass the chapter to the template
     return render(request, 'chapter_detail.html', {
@@ -157,5 +165,47 @@ def chapter_detail_view(request, manga_slug, chapter_number):
         'next_chapter': next_chapter,
         'prev_chapter': prev_chapter,
         'meta_description': f"Read {manga.title} {chapter.title} online. Updated daily on MangaFoxy.",
-        'meta_keywords' : ', '.join(manga.genre + [manga.title, chapter.title]),
+        'meta_keywords': ', '.join(manga.genre + [manga.title, chapter.title]),
     })
+
+
+def genre_view(request, genre_slug=None):
+    # Get all unique genres from the database
+    all_genres = set()
+    for manga in Manga.objects.all():
+        all_genres.update(manga.genre)
+    genres = sorted(list(all_genres))
+
+    # If genre_slug is provided, use it as the selected genre
+    selected_genre = genre_slug.replace(
+        '-', ' ').title() if genre_slug else None
+
+    # Filter mangas by genre if one is selected
+    if selected_genre:
+        mangas = Manga.objects.filter(genre__icontains=selected_genre)
+    else:
+        # For the genre list page, show all manga
+        mangas = Manga.objects.all()
+
+    # Pagination
+    paginator = Paginator(mangas, 24)  # Show 24 mangas per page
+    page = request.GET.get('page')
+    mangas = paginator.get_page(page)
+
+    # If we're on a genre detail page and the genre doesn't exist, return 404
+    if genre_slug and not mangas:
+        raise Http404("Genre not found")
+
+    return render(request, 'genre.html', {
+        'genres': genres,
+        'selected_genre': selected_genre,
+        'mangas': mangas,
+    })
+
+
+def copyright_view(request):
+    return render(request, 'copyright.html')
+
+
+def terms_view(request):
+    return render(request, 'terms.html')

@@ -1,0 +1,97 @@
+{% extends "./base/base.html" %}
+{% block title %}
+  Terms of Use - MangaFoxy
+{% endblock title %}
+
+{% block meta_description %}
+  Read MangaFoxy's terms of use. Learn about our service terms, user guidelines, and policies for using our manga reading platform.
+{% endblock meta_description %}
+
+{% block meta_keywords %}
+  manga terms, manga conditions, manga rules, manga guidelines, manga policy, manga terms of service, manga user agreement
+{% endblock meta_keywords %}
+
+{% block content %}
+  <section aria-labelledby="terms-heading" class="container mx-auto px-4 py-8 max-w-4xl">
+    <h1 id="terms-heading" class="text-3xl font-bold mb-6">Terms of Use</h1>
+    
+    <article class="prose prose-lg">
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Acceptance of Terms</h2>
+        <p>By accessing and using MangaFoxy, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use our service.</p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">User Conduct</h2>
+        <p>Users must adhere to the following guidelines:</p>
+        <ul class="list-disc pl-6 mt-2">
+          <li>Use the service for personal, non-commercial purposes only</li>
+          <li>Respect copyright and intellectual property rights</li>
+          <li>Do not engage in any illegal activities</li>
+          <li>Do not attempt to disrupt or compromise the service</li>
+          <li>Do not share account credentials</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Content Disclaimer</h2>
+        <p>MangaFoxy provides access to manga content for informational and entertainment purposes only. We do not claim ownership of the manga content and respect the rights of content creators and publishers.</p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Service Modifications</h2>
+        <p>We reserve the right to modify, suspend, or discontinue any aspect of the service at any time. We may also update these terms periodically, and continued use of the service constitutes acceptance of any changes.</p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Limitation of Liability</h2>
+        <p>MangaFoxy is provided "as is" without any warranties. We are not liable for any damages arising from the use or inability to use our service.</p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Contact Information</h2>
+        <p>For questions about these terms, please contact us at:</p>
+        <address class="not-italic mt-2">
+          Email: terms@mangafoxy.com<br>
+          Subject: Terms of Use Inquiry
+        </address>
+      </section>
+    </article>
+  </section>
+{% endblock content %}
+
+{% block extra_head %}
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+  
+  <!-- Open Graph Metadata -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Terms of Use - MangaFoxy" />
+  <meta property="og:description" content="Read MangaFoxy's terms of use. Learn about our service terms, user guidelines, and policies for using our manga reading platform." />
+  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+  <meta property="og:site_name" content="MangaFoxy" />
+  
+  <!-- Twitter Card Metadata -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Terms of Use - MangaFoxy" />
+  <meta name="twitter:description" content="Read MangaFoxy's terms of use. Learn about our service terms, user guidelines, and policies for using our manga reading platform." />
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "{{ request.build_absolute_uri }}"
+    },
+    "name": "Terms of Use - MangaFoxy",
+    "description": "Read MangaFoxy's terms of use. Learn about our service terms, user guidelines, and policies for using our manga reading platform.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "MangaFoxy"
+    },
+    "url": "{{ request.build_absolute_uri }}"
+  }
+  </script>
+{% endblock extra_head %} 

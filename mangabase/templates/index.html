@@ -9,28 +9,76 @@
   read manga online, free manga, manga online, manga reader, latest manga chapters, popular manga, mangafox alternative, manga scanlations, manga updates, english manga, manga website, best manga site, manga list, new manga, manga chapters online
 {% endblock meta_keywords %}
 {% block content %}
-  <h2 class="text-sm p-4 pb-2 text-base-content/60">All Manga Titles</h2>
-  <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 rounded-box shadow-md list bg-base-100">
-    {% for manga in mangas %}
-      {% include "./components/manga_card.html" with manga=manga %}
-    {% empty %}
-      <p>No manga found.</p>
-    {% endfor %}
-  </ul>
+  <section aria-labelledby="manga-list-heading" class="container mx-auto px-4 py-8">
+    <h1 id="manga-list-heading" class="text-2xl font-bold mb-4">Latest Manga Updates</h1>
+    <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 rounded-box shadow-md list bg-base-100" role="list">
+      {% for manga in mangas %}
+        <li role="listitem">
+          {% include "./components/manga_card.html" with manga=manga %}
+        </li>
+      {% empty %}
+        <li class="col-span-full text-center text-gray-500">No manga found.</li>
+      {% endfor %}
+    </ul>
+  </section>
+
   {% if mangas.has_other_pages %}
-    <div class="join flex justify-center mt-6">
+    <nav aria-label="Pagination" class="join flex justify-center mt-6">
       {% if mangas.has_previous %}
-        <a href="?page=1" class="join-item btn btn-sm">« First</a>
+        <a href="?page=1" class="join-item btn btn-sm" aria-label="First page">« First</a>
         <a href="?page={{ mangas.previous_page_number }}"
-           class="join-item btn btn-sm">‹ Prev</a>
+           class="join-item btn btn-sm" aria-label="Previous page">‹ Prev</a>
       {% endif %}
-      <span class="join-item btn btn-sm btn-disabled">Page {{ mangas.number }} of {{ mangas.paginator.num_pages }}</span>
+      <span class="join-item btn btn-sm btn-disabled" aria-current="page">
+        Page {{ mangas.number }} of {{ mangas.paginator.num_pages }}
+      </span>
       {% if mangas.has_next %}
         <a href="?page={{ mangas.next_page_number }}"
-           class="join-item btn btn-sm">Next ›</a>
+           class="join-item btn btn-sm" aria-label="Next page">Next ›</a>
         <a href="?page={{ mangas.paginator.num_pages }}"
-           class="join-item btn btn-sm">Last »</a>
+           class="join-item btn btn-sm" aria-label="Last page">Last »</a>
       {% endif %}
-    </div>
+    </nav>
   {% endif %}
 {% endblock content %}
+
+{% block extra_head %}
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+  
+  <!-- Open Graph Metadata -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Read Manga Online Free – Latest Manga Updates | MangaFoxy.com" />
+  <meta property="og:description" content="Read manga online for free at MangaFoxy. Discover the latest chapters of top manga like One Piece, Jujutsu Kaisen, Solo Leveling, and more. Updated daily!" />
+  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+  <meta property="og:site_name" content="MangaFoxy" />
+  
+  <!-- Twitter Card Metadata -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Read Manga Online Free – Latest Manga Updates | MangaFoxy.com" />
+  <meta name="twitter:description" content="Read manga online for free at MangaFoxy. Discover the latest chapters of top manga like One Piece, Jujutsu Kaisen, Solo Leveling, and more. Updated daily!" />
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "{{ request.build_absolute_uri }}"
+    },
+    "name": "Latest Manga Updates",
+    "description": "Read manga online for free at MangaFoxy. Discover the latest chapters of top manga like One Piece, Jujutsu Kaisen, Solo Leveling, and more. Updated daily!",
+    "publisher": {
+      "@type": "Organization",
+      "name": "MangaFoxy"
+    },
+    "url": "{{ request.build_absolute_uri }}",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "MangaFoxy",
+      "url": "{{ request.scheme }}://{{ request.get_host }}"
+    }
+  }
+  </script>
+{% endblock extra_head %}

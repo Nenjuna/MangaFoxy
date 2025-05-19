@@ -9,144 +9,147 @@
     {{ manga.title }}, {{ manga.genre|join:", " }}, manga online, read free manga
 {% endblock meta_keywords %}
 {% block content %}
-    <div class="card bg-base-100 shadow-md">
-        <!-- Main wrapper: Stack on mobile, side-by-side on sm+ -->
-        <div class="flex flex-col sm:flex-row">
-            <!-- Image: full width on mobile -->
-            <figure class="aspect-[3/4] w-full sm:w-1/3 overflow-hidden">
-                <img src="{{ manga.thumbnail_url }}"
-                     alt="{{ manga.title }}"
-                     class="w-full h-full object-cover"
-                     loading="lazy"
-                     width="800"
-                     height="600" />
-            </figure>
-            <!-- Card Body -->
-            <div class="card-body flex flex-col w-full sm:w-2/3">
-                <!-- Title -->
-                <h1 class="card-title text-xl sm:text-2xl font-bold text-base-content">{{ manga.title }}</h1>
-                <!-- Meta Information -->
-                <section aria-label="Manga information"
-                         class="mt-2 space-y-2 text-sm text-gray-700">
-                    {% if manga.rank %}
-                        <div class="flex items-center gap-2">
-                            <strong class="text-base-content">Rank:</strong>
-                            <span class="font-semibold">#{{ manga.rank }}</span>
-                        </div>
-                    {% endif %}
-                    {% if manga.rating %}
-                        <div class="flex items-center gap-2">
-                            <strong class="text-base-content">Rating:</strong>
-                            <span class="font-semibold">{{ manga.rating }}/5</span>
-                        </div>
-                    {% endif %}
-                    {% if manga.genre %}
-                        <div class="flex items-start gap-2 flex-wrap">
-                            <strong class="font-medium text-base-content">Genres:</strong>
-                            <ul class="flex flex-wrap gap-2 list-none m-0 p-0">
-                                {% for g in manga.genre %}
-                                    <li>
-                                        <div class="badge badge-soft badge-info">{{ g }}</div>
-                                        {% comment %} <span class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-800 text-xs font-medium">{{ g }}</span> {% endcomment %}
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    {% endif %}
-                    <!-- Release + Status -->
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-6 text-sm mt-2">
-                        {% if manga.year %}
-                            <div class="flex items-center gap-1">
-                                <span class="font-medium text-base-content">Release:</span>
-                                <time datetime="{{ manga.year }}" class="font-semibold text-base-content">{{ manga.year }}</time>
+    <div>
+        <article class="card bg-base-100 shadow-md">
+            <!-- Main wrapper: Stack on mobile, side-by-side on sm+ -->
+            <div class="flex flex-col sm:flex-row">
+                <!-- Image: full width on mobile -->
+                <figure class="aspect-[3/4] w-full sm:w-1/3 overflow-hidden">
+                    <img src="{{ manga.thumbnail_url }}"
+                         alt="{{ manga.title }}"
+                         class="w-full h-full object-cover"
+                         loading="lazy"
+                         width="800"
+                         height="600" />
+                </figure>
+                <!-- Card Body -->
+                <div class="card-body flex flex-col w-full sm:w-2/3">
+                    <!-- Title -->
+                    <header>
+                        <h1 class="card-title text-xl sm:text-2xl font-bold text-base-content">{{ manga.title }}</h1>
+                    </header>
+                    <!-- Meta Information -->
+                    <section aria-label="Manga information"
+                             class="mt-2 space-y-2 text-sm text-gray-700">
+                        {% if manga.rank %}
+                            <div class="flex items-center gap-2">
+                                <strong class="text-base-content">Rank:</strong>
+                                <span class="font-semibold">#{{ manga.rank }}</span>
                             </div>
                         {% endif %}
-                        {% if manga.status %}
-                            {% comment %} <div class="flex items-center gap-1 mt-1 sm:mt-0">
-                                <span class="font-medium text-base-content">Status:</span>
-                                <span class="inline-block px-2 py-0.5 rounded {% if manga.status == 'ongoing' %} bg-green-100 text-green-700 {% elif manga.status == 'completed' %} bg-blue-100 text-blue-700 {% elif manga.status == 'hiatus' %} bg-yellow-100 text-yellow-700 {% else %} bg-gray-100 text-gray-700 {% endif %} text-xs uppercase font-semibold tracking-wide">
-                                    {{ manga.status }}
-                                </span>
-                            </div> {% endcomment %}
-                            <div class="flex items-center gap-2 mt-1 sm:mt-0">
-                                <span class="font-medium text-base-content">Status:</span>
-                                {% if manga.status == 'ongoing' %}
-                                    <div class="flex items-center gap-1">
-                                        <div class="inline-grid *:[grid-area:1/1] relative w-3 h-3">
-                                            <div class="status status-success animate-ping"></div>
-                                            <div class="status status-success"></div>
-                                        </div>
-                                        <span class="text-xs font-semibold uppercase text-green-700">Ongoing</span>
-                                    </div>
-                                {% elif manga.status == 'completed' %}
-                                    <div class="flex items-center gap-1">
-                                        <div class="inline-grid *:[grid-area:1/1] relative w-3 h-3">
-                                            <div class="status status-info animate-ping"></div>
-                                            <div class="status status-info"></div>
-                                        </div>
-                                        <span class="text-xs font-semibold uppercase text-blue-700">Completed</span>
-                                    </div>
-                                {% elif manga.status == 'hiatus' %}
-                                    <div class="flex items-center gap-1">
-                                        <div class="inline-grid *:[grid-area:1/1] relative w-3 h-3">
-                                            <div class="status status-warning animate-ping"></div>
-                                            <div class="status status-warning"></div>
-                                        </div>
-                                        <span class="text-xs font-semibold uppercase text-yellow-700">Hiatus</span>
-                                    </div>
-                                {% else %}
-                                    <div class="flex items-center gap-1">
-                                        <div class="inline-grid *:[grid-area:1/1] relative w-3 h-3">
-                                            <div class="status status-neutral animate-ping"></div>
-                                            <div class="status status-neutral"></div>
-                                        </div>
-                                        <span class="text-xs font-semibold uppercase text-gray-700">{{ manga.status|title }}</span>
-                                    </div>
-                                {% endif %}
+                        {% if manga.rating %}
+                            <div class="flex items-center gap-2">
+                                <strong class="text-base-content">Rating:</strong>
+                                <span class="font-semibold">{{ manga.rating }}/5</span>
                             </div>
                         {% endif %}
-                    </div>
-                    {% if manga.view_count %}
-                        <div class="flex items-center gap-2">
-                            <strong class="font-medium text-base-content">Views:</strong>
-                            <span class="font-semibold">{{ manga.view_count }}</span>
+                        {% if manga.genre %}
+                            <div class="flex items-start gap-2 flex-wrap">
+                                <strong class="font-medium text-base-content">Genres:</strong>
+                                <nav aria-label="Genre navigation">
+                                    <ul class="flex flex-wrap gap-2 list-none m-0 p-0">
+                                        {% for g in manga.genre %}
+                                            <li>
+                                                <a href="{% url 'genre-detail' g|slugify %}" class="badge badge-soft badge-info hover:badge-primary">{{ g }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </nav>
+                            </div>
+                        {% endif %}
+                        <!-- Release + Status -->
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-6 text-sm mt-2">
+                            {% if manga.year %}
+                                <div class="flex items-center gap-1">
+                                    <span class="font-medium text-base-content">Release:</span>
+                                    <time datetime="{{ manga.year }}" class="font-semibold text-base-content">{{ manga.year }}</time>
+                                </div>
+                            {% endif %}
+                            {% if manga.status %}
+                                <div class="flex items-center gap-2 mt-1 sm:mt-0">
+                                    <span class="font-medium text-base-content">Status:</span>
+                                    {% if manga.status == 'ongoing' %}
+                                        <div class="flex items-center gap-1">
+                                            <div class="inline-grid *:[grid-area:1/1] relative w-3 h-3">
+                                                <div class="status status-success animate-ping"></div>
+                                                <div class="status status-success"></div>
+                                            </div>
+                                            <span class="text-xs font-semibold uppercase text-green-700">Ongoing</span>
+                                        </div>
+                                    {% elif manga.status == 'completed' %}
+                                        <div class="flex items-center gap-1">
+                                            <div class="inline-grid *:[grid-area:1/1] relative w-3 h-3">
+                                                <div class="status status-info animate-ping"></div>
+                                                <div class="status status-info"></div>
+                                            </div>
+                                            <span class="text-xs font-semibold uppercase text-blue-700">Completed</span>
+                                        </div>
+                                    {% elif manga.status == 'hiatus' %}
+                                        <div class="flex items-center gap-1">
+                                            <div class="inline-grid *:[grid-area:1/1] relative w-3 h-3">
+                                                <div class="status status-warning animate-ping"></div>
+                                                <div class="status status-warning"></div>
+                                            </div>
+                                            <span class="text-xs font-semibold uppercase text-yellow-700">Hiatus</span>
+                                        </div>
+                                    {% else %}
+                                        <div class="flex items-center gap-1">
+                                            <div class="inline-grid *:[grid-area:1/1] relative w-3 h-3">
+                                                <div class="status status-neutral animate-ping"></div>
+                                                <div class="status status-neutral"></div>
+                                            </div>
+                                            <span class="text-xs font-semibold uppercase text-gray-700">{{ manga.status|title }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
                         </div>
-                    {% endif %}
-                </section>
-                <!-- Button -->
-                <div class="flex gap-4 my-4">
-                    {% if first_chapter %}
-                        <a href="{% url 'chapter_detail' manga.slug first_chapter.slug %}"
-                           class="btn btn-neutral">Start Reading</a>
-                    {% endif %}
-                    {% if latest_chapter %}
-                        <a href="{% url 'chapter_detail' manga.slug latest_chapter.slug %}"
-                           class="btn btn-neutral">Latest Chapter</a>
-                    {% endif %}
+                        {% if manga.view_count %}
+                            <div class="flex items-center gap-2">
+                                <strong class="font-medium text-base-content">Views:</strong>
+                                <span class="font-semibold">{{ manga.view_count }}</span>
+                            </div>
+                        {% endif %}
+                    </section>
+                    <!-- Button -->
+                    <nav aria-label="Chapter navigation" class="flex gap-4 my-4">
+                        {% if first_chapter %}
+                            <a href="{% url 'chapter_detail' manga.slug first_chapter.slug %}"
+                               class="btn btn-neutral">Start Reading</a>
+                        {% endif %}
+                        {% if latest_chapter %}
+                            <a href="{% url 'chapter_detail' manga.slug latest_chapter.slug %}"
+                               class="btn btn-neutral">Latest Chapter</a>
+                        {% endif %}
+                    </nav>
                 </div>
             </div>
-        </div>
+        </article>
+
+        {% if manga.summary %}
+            <section class="card bg-base-100 shadow-md mt-10">
+                <div class="card-body">
+                    <h2 class="card-title">Summary</h2>
+                    <div class="w-full">{{ manga.summary }}</div>
+                </div>
+            </section>
+        {% endif %}
+
+        {% if chapters %}
+            <nav aria-label="Chapter list" class="mt-10">
+                <h2 class="sr-only">Chapter List</h2>
+                <ul class="grid sm:grid-cols-2 grid-cols-1 gap-4 p-4 list bg-base-100 rounded-box shadow-md" role="list">
+                    {% for chap in chapters %}
+                        <li role="listitem" class="list-row">
+                            <a class="link" href={{ chap.slug }}>{{ chap.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        {% endif %}
     </div>
-    {% if manga.summary %}
-        <div class="card bg-base-100 shadow-md mt-10">
-            <div class="card-body">
-                <h2 class="card-title">Summary</h2>
-                <div class="w-full">{{ manga.summary }}</div>
-            </div>
-        </div>
-    {% endif %}
-    {% if chapters %}
-        <ul class="grid sm:grid-cols-2 grid-cols-1 gap-4 p-4 list bg-base-100 rounded-box shadow-md">
-            {% for chap in chapters %}
-                <li class="list-row">
-                    <div>
-                        <a class="link" href={{ chap.slug }}>{{ chap.title }}</a>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
 {% endblock content %}
+
 {% block extra_head %}
     <!-- Canonical URL -->
     <link rel="canonical" href="{{ request.build_absolute_uri }}" />

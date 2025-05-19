@@ -2,6 +2,7 @@ from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 from manga.models import Manga, Chapter
 from django.utils import timezone
+from django.utils.text import slugify
 
 
 class StaticViewSitemap(Sitemap):
@@ -31,7 +32,7 @@ class GenreSitemap(Sitemap):
         return sorted(list(unique_genres))
 
     def location(self, item):
-        return f'/genre/{item}/'
+        return reverse('genre-detail', kwargs={'genre_slug': slugify(item)})
 
 
 class MangaSitemap(Sitemap):
@@ -42,7 +43,10 @@ class MangaSitemap(Sitemap):
         return Manga.objects.all()
 
     def lastmod(self, obj):
-        return obj.updated_at or timezone.now()
+        return obj.last_scraped or timezone.now()
+
+    def location(self, obj):
+        return reverse('manga-detail', kwargs={'slug': obj.slug})
 
 
 class ChapterSitemap(Sitemap):
@@ -53,7 +57,10 @@ class ChapterSitemap(Sitemap):
         return Chapter.objects.all()
 
     def lastmod(self, obj):
-        return obj.updated_at or timezone.now()
+        return obj.created_at or timezone.now()
 
     def location(self, obj):
-        return f'/{obj.manga.slug}/{obj.slug}/'
+        return reverse('chapter_detail', kwargs={
+            'manga_slug': obj.manga.slug,
+            'chapter_number': obj.slug
+        })

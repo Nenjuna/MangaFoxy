@@ -1,0 +1,128 @@
+{% extends "./base/base.html" %}
+{% block title %}
+  {% if selected_genre %}
+    {{ selected_genre }} Manga - Read Free {{ selected_genre }} Manga Online | MangaFoxy
+  {% else %}
+    Browse Manga by Genre - Read Free Manga Online | MangaFoxy
+  {% endif %}
+{% endblock title %}
+
+{% block meta_description %}
+  {% if selected_genre %}
+    Read free {{ selected_genre }} manga online at MangaFoxy. Discover the latest {{ selected_genre }} manga series, updated daily with high-quality scans.
+  {% else %}
+    Browse manga by genre at MangaFoxy. Find your favorite manga series categorized by action, adventure, romance, comedy, and more genres. Updated daily with new chapters.
+  {% endif %}
+{% endblock meta_description %}
+
+{% block meta_keywords %}
+  {% if selected_genre %}
+    {{ selected_genre }} manga, read {{ selected_genre }} manga online, free {{ selected_genre }} manga, {{ selected_genre }} manga list, latest {{ selected_genre }} manga, {{ selected_genre }} manga series
+  {% else %}
+    manga genres, manga categories, action manga, romance manga, adventure manga, comedy manga, manga by genre, manga classification, free manga online
+  {% endif %}
+{% endblock meta_keywords %}
+
+{% block content %}
+  <div class="container mx-auto px-4 py-8">
+    <!-- Genre List -->
+    <section aria-labelledby="genre-heading" class="mb-8">
+      <h1 id="genre-heading" class="text-2xl font-bold mb-4">
+        {% if selected_genre %}
+          {{ selected_genre }} Manga
+        {% else %}
+          Browse Manga by Genre
+        {% endif %}
+      </h1>
+      <nav aria-label="Genre navigation">
+        <div class="flex flex-wrap gap-2">
+          {% for genre in genres %}
+            <a href="{% url 'genre-detail' genre|slugify %}" 
+               class="badge badge-lg {% if selected_genre == genre %}badge-primary{% else %}badge-outline{% endif %} hover:badge-primary">
+              {{ genre }}
+            </a>
+          {% endfor %}
+        </div>
+      </nav>
+    </section>
+
+    <!-- Manga Grid -->
+    <section aria-labelledby="manga-heading">
+      {% if selected_genre %}
+        <h2 id="manga-heading" class="text-xl font-semibold mb-4">Popular {{ selected_genre }} Manga</h2>
+      {% endif %}
+      
+      <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" role="list">
+        {% for manga in mangas %}
+          <li role="listitem">
+            {% include "./components/manga_card.html" with manga=manga %}
+          </li>
+        {% empty %}
+          <li class="col-span-full text-center text-gray-500">No manga found in this genre.</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <!-- Pagination -->
+    {% if mangas.has_other_pages %}
+      <nav aria-label="Pagination" class="join flex justify-center mt-6">
+        {% if mangas.has_previous %}
+          <a href="?page=1" class="join-item btn btn-sm" aria-label="First page">« First</a>
+          <a href="?page={{ mangas.previous_page_number }}"
+             class="join-item btn btn-sm" aria-label="Previous page">‹ Prev</a>
+        {% endif %}
+        <span class="join-item btn btn-sm btn-disabled" aria-current="page">
+          Page {{ mangas.number }} of {{ mangas.paginator.num_pages }}
+        </span>
+        {% if mangas.has_next %}
+          <a href="?page={{ mangas.next_page_number }}"
+             class="join-item btn btn-sm" aria-label="Next page">Next ›</a>
+          <a href="?page={{ mangas.paginator.num_pages }}"
+             class="join-item btn btn-sm" aria-label="Last page">Last »</a>
+        {% endif %}
+      </nav>
+    {% endif %}
+  </div>
+{% endblock content %}
+
+{% block extra_head %}
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+  
+  <!-- Open Graph Metadata -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{% if selected_genre %}{{ selected_genre }} Manga - Read Free Online{% else %}Browse Manga by Genre{% endif %} | MangaFoxy" />
+  <meta property="og:description" content="{% if selected_genre %}Read free {{ selected_genre }} manga online at MangaFoxy. Discover the latest {{ selected_genre }} manga series, updated daily.{% else %}Browse manga by genre at MangaFoxy. Find your favorite manga series categorized by action, adventure, romance, comedy, and more genres.{% endif %}" />
+  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+  <meta property="og:site_name" content="MangaFoxy" />
+  
+  <!-- Twitter Card Metadata -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{% if selected_genre %}{{ selected_genre }} Manga - Read Free Online{% else %}Browse Manga by Genre{% endif %} | MangaFoxy" />
+  <meta name="twitter:description" content="{% if selected_genre %}Read free {{ selected_genre }} manga online at MangaFoxy. Discover the latest {{ selected_genre }} manga series, updated daily.{% else %}Browse manga by genre at MangaFoxy. Find your favorite manga series categorized by action, adventure, romance, comedy, and more genres.{% endif %}" />
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "{% if selected_genre %}CollectionPage{% else %}WebPage{% endif %}",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "{{ request.build_absolute_uri }}"
+    },
+    "name": "{% if selected_genre %}{{ selected_genre }} Manga{% else %}Browse Manga by Genre{% endif %}",
+    "description": "{% if selected_genre %}Read free {{ selected_genre }} manga online at MangaFoxy. Discover the latest {{ selected_genre }} manga series, updated daily.{% else %}Browse manga by genre at MangaFoxy. Find your favorite manga series categorized by action, adventure, romance, comedy, and more genres.{% endif %}",
+    "publisher": {
+      "@type": "Organization",
+      "name": "MangaFoxy"
+    },
+    {% if selected_genre %}
+    "about": {
+      "@type": "Thing",
+      "name": "{{ selected_genre }} Manga"
+    },
+    {% endif %}
+    "url": "{{ request.build_absolute_uri }}"
+  }
+  </script>
+{% endblock extra_head %} 

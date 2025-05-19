@@ -17,17 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
-from django.contrib import sitemaps
-from django.contrib.sitemaps.views import sitemap
-from manga.sitemaps import StaticViewSitemap, MangaSitemap
 from django.views.generic import TemplateView
+from django.contrib.sitemaps.views import sitemap
+from .sitemaps import StaticViewSitemap, GenreSitemap, MangaSitemap, ChapterSitemap
 
-
-
-
-sitemaps_dict = {
+sitemaps = {
     'static': StaticViewSitemap,
+    'genre': GenreSitemap,
     'manga': MangaSitemap,
+    'chapter': ChapterSitemap,
 }
 
 urlpatterns = [
@@ -35,8 +33,16 @@ urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")),
     path('', views.home, name='home'),
     path('api/', include('manga.urls')),
+    path('genre/', views.genre_view, name='genre-list'),
+    path('copyright/', views.copyright_view, name='copyright'),
+    path('terms/', views.terms_view, name='terms'),
+    path('genre/<slug:genre_slug>/', views.genre_view, name='genre-detail'),
     path('<slug:slug>/', views.manga_detail_view, name='manga-detail'),
-    path('<slug:manga_slug>/<slug:chapter_number>/', views.chapter_detail_view, name='chapter_detail'),
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps_dict}, name='django.contrib.sitemaps.views.sitemap'),
-    path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
+    path('<slug:manga_slug>/<slug:chapter_number>/',
+         views.chapter_detail_view, name='chapter_detail'),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
+    path("robots.txt", TemplateView.as_view(
+        template_name="robots.txt", content_type="text/plain")),
+    path("manifest.json", TemplateView.as_view(
+        template_name="manifest.json", content_type="application/json"), name='manifest'),
 ]

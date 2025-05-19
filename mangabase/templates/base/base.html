@@ -28,6 +28,16 @@
                 MangaFoxy
             {% endblock title %}
         </title>
+        <!-- PWA Support -->
+        <link rel="manifest" href="{% url 'manifest' %}">
+        <meta name="theme-color" content="#000000">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="MangaFoxy">
+        <link rel="apple-touch-icon" href="{% static 'images/mangafox_favicon.ico' %}">
+        <!-- Preconnect to external domains -->
+        <link rel="preconnect" href="https://www.googletagmanager.com">
+        <link rel="preconnect" href="https://www.google-analytics.com">
         {% block extra_head %}
         {% endblock extra_head %}
         <!-- Google tag (gtag.js) -->
