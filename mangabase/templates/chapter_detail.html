@@ -42,6 +42,15 @@
             </li>
         </ol>
     </nav>
+
+    <!-- Top Ad -->
+    <div id="ezoic-pub-ad-placeholder-112"></div>
+    <script>
+        ezstandalone.cmd.push(function() {
+            ezstandalone.showAds(112)
+        });
+    </script>
+
     <article itemscope itemtype="https://schema.org/ComicStory">
         <header class="text-center mb-6">
             <h1 class="text-2xl font-bold"
@@ -67,6 +76,15 @@
                 <button class="btn btn-sm btn-disabled">Next →</button>
             {% endif %}
         </div>
+
+        <!-- Middle Ad -->
+        <div id="ezoic-pub-ad-placeholder-113"></div>
+        <script>
+            ezstandalone.cmd.push(function() {
+                ezstandalone.showAds(113)
+            });
+        </script>
+
         {% if chapter.image_urls %}
             <div class="flex flex-col gap-6">
                 {% for img in chapter.image_urls %}
@@ -78,11 +96,29 @@
                                  class="w-full" />
                         </figure>
                     </div>
+                    {% if forloop.counter|divisibleby:3 %}
+                        <!-- In-content Ad -->
+                        <div id="ezoic-pub-ad-placeholder-114"></div>
+                        <script>
+                            ezstandalone.cmd.push(function() {
+                                ezstandalone.showAds(114)
+                            });
+                        </script>
+                    {% endif %}
                 {% endfor %}
             </div>
         {% else %}
             <p>No images available for this chapter.</p>
         {% endif %}
+
+        <!-- Bottom Ad -->
+        <div id="ezoic-pub-ad-placeholder-115"></div>
+        <script>
+            ezstandalone.cmd.push(function() {
+                ezstandalone.showAds(115)
+            });
+        </script>
+
         <div class="flex justify-between items-center mt-10">
             {% if prev_chapter %}
                 <a href="{% url 'chapter_detail' manga.slug prev_chapter.slug %}"
