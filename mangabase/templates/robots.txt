@@ -3,6 +3,7 @@ Allow: /
 Allow: /genre/
 Allow: /copyright/
 Allow: /terms/
+Allow: /sitemap*.xml
 
 # Disallow admin and API endpoints
 Disallow: /admin/
@@ -11,5 +12,5 @@ Disallow: /accounts/
 Disallow: /static/admin/
 Disallow: /media/
 
-# Sitemap
+# Sitemaps
 Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml
