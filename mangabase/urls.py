@@ -37,10 +37,17 @@ urlpatterns = [
     path('copyright/', views.copyright_view, name='copyright'),
     path('terms/', views.terms_view, name='terms'),
     path('genre/<slug:genre_slug>/', views.genre_view, name='genre-detail'),
+    path('about/', views.about_view, name='about'),
+    path('contact/', views.contact_view, name='contact'),
     path('<slug:slug>/', views.manga_detail_view, name='manga-detail'),
     path('<slug:manga_slug>/<slug:chapter_number>/',
          views.chapter_detail_view, name='chapter_detail'),
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
+    path('sitemap.xml', views.sitemap_index, name='sitemap_index'),
+    path('sitemap-manga.xml', views.sitemap_manga, name='sitemap_manga'),
+    path('sitemap-chapters-<int:page>.xml',
+         views.sitemap_chapters, name='sitemap_chapters'),
+    path('sitemap-genres.xml', views.sitemap_genres, name='sitemap_genres'),
+    path('sitemap-pages.xml', views.sitemap_pages, name='sitemap_pages'),
     path("robots.txt", TemplateView.as_view(
         template_name="robots.txt", content_type="text/plain")),
     path("manifest.json", TemplateView.as_view(

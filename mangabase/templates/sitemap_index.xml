@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap>
+        <loc>{{ request.scheme }}://{{ request.get_host }}/sitemap-manga.xml</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+    </sitemap>
+    {% for page in chapter_pages %}
+    <sitemap>
+        <loc>{{ request.scheme }}://{{ request.get_host }}/sitemap-chapters-{{ page }}.xml</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+    </sitemap>
+    {% endfor %}
+    <sitemap>
+        <loc>{{ request.scheme }}://{{ request.get_host }}/sitemap-genres.xml</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>{{ request.scheme }}://{{ request.get_host }}/sitemap-pages.xml</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+    </sitemap>
+</sitemapindex> 

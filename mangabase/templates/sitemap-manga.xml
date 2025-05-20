@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {% for manga in mangas %}
+    <url>
+        <loc>{{ request.scheme }}://{{ request.get_host }}{% url 'manga-detail' manga.slug %}</loc>
+        <lastmod>{{ manga.last_scraped|date:"Y-m-d" }}</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+    {% endfor %}
+</urlset> 

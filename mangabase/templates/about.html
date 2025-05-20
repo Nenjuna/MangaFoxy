@@ -1,0 +1,83 @@
+{% extends "./base/base.html" %}
+
+{% block title %}About Us - MangaFoxy{% endblock %}
+
+{% block meta_description %}Learn more about MangaFoxy - your trusted source for reading manga online. Discover our mission, values, and commitment to providing the best manga reading experience.{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8 text-base-content">About MangaFoxy</h1>
+        
+        <div class="prose prose-lg max-w-none">
+            <section class="mb-8">
+                <h2 class="text-2xl font-semibold mb-4 text-base-content">Our Mission</h2>
+                <p class="mb-4">At MangaFoxy, we're dedicated to providing manga enthusiasts with a seamless and enjoyable reading experience. Our platform brings together a vast collection of manga titles, making it easy for readers to discover and enjoy their favorite stories.</p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-2xl font-semibold mb-4 text-base-content">What We Offer</h2>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li>Extensive collection of manga titles</li>
+                    <li>Regular updates with new chapters</li>
+                    <li>User-friendly reading interface</li>
+                    <li>Mobile-responsive design</li>
+                    <li>Fast and reliable service</li>
+                </ul>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-2xl font-semibold mb-4 text-base-content">Our Commitment</h2>
+                <p class="mb-4">We are committed to:</p>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li>Providing high-quality manga content</li>
+                    <li>Maintaining a user-friendly platform</li>
+                    <li>Ensuring fast and reliable service</li>
+                    <li>Regular updates and improvements</li>
+                    <li>Respecting copyright and intellectual property rights</li>
+                </ul>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-2xl font-semibold mb-4 text-base-content">Contact Us</h2>
+                <p class="mb-4">Have questions or suggestions? We'd love to hear from you! Visit our <a href="{% url 'contact' %}" class="link link-primary">contact page</a> to get in touch.</p>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ request.build_absolute_uri }}" />
+
+<!-- Open Graph Metadata -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="About Us - MangaFoxy" />
+<meta property="og:description" content="Learn more about MangaFoxy - your trusted source for reading manga online. Discover our mission, values, and commitment to providing the best manga reading experience." />
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
+<meta property="og:site_name" content="MangaFoxy" />
+
+<!-- Twitter Card Metadata -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="About Us - MangaFoxy" />
+<meta name="twitter:description" content="Learn more about MangaFoxy - your trusted source for reading manga online. Discover our mission, values, and commitment to providing the best manga reading experience." />
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ request.build_absolute_uri }}"
+    },
+    "name": "About MangaFoxy",
+    "description": "Learn more about MangaFoxy - your trusted source for reading manga online. Discover our mission, values, and commitment to providing the best manga reading experience.",
+    "publisher": {
+        "@type": "Organization",
+        "name": "MangaFoxy"
+    }
+}
+</script>
+{% endblock %} 

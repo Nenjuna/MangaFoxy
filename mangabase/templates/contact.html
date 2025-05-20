@@ -1,0 +1,124 @@
+{% extends "./base/base.html" %}
+
+{% block title %}Contact Us - MangaFoxy{% endblock %}
+
+{% block meta_description %}Get in touch with the MangaFoxy team. We're here to help with any questions, feedback, or support you need regarding our manga reading platform.{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8 text-base-content">Contact Us</h1>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Contact Form -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl mb-4">Send us a Message</h2>
+                    <form method="post" class="space-y-4">
+                        {% csrf_token %}
+                        <div class="form-control">
+                            <label class="label" for="name">
+                                <span class="label-text">Name</span>
+                            </label>
+                            <input type="text" id="name" name="name" class="input input-bordered" required />
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label" for="email">
+                                <span class="label-text">Email</span>
+                            </label>
+                            <input type="email" id="email" name="email" class="input input-bordered" required />
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label" for="subject">
+                                <span class="label-text">Subject</span>
+                            </label>
+                            <input type="text" id="subject" name="subject" class="input input-bordered" required />
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label" for="message">
+                                <span class="label-text">Message</span>
+                            </label>
+                            <textarea id="message" name="message" class="textarea textarea-bordered h-32" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-full">Send Message</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="space-y-6">
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title text-2xl mb-4">Contact Information</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="font-semibold text-lg">Email</h3>
+                                <p class="text-base-content/80">support@mangafoxy.com</p>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-lg">Response Time</h3>
+                                <p class="text-base-content/80">We typically respond within 24-48 hours</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title text-2xl mb-4">Frequently Asked Questions</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="font-semibold text-lg">How do I report an issue?</h3>
+                                <p class="text-base-content/80">Use the contact form above to report any technical issues or broken links.</p>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-lg">How can I suggest new features?</h3>
+                                <p class="text-base-content/80">We welcome your suggestions! Use the contact form to share your ideas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ request.build_absolute_uri }}" />
+
+<!-- Open Graph Metadata -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Contact Us - MangaFoxy" />
+<meta property="og:description" content="Get in touch with the MangaFoxy team. We're here to help with any questions, feedback, or support you need regarding our manga reading platform." />
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
+<meta property="og:site_name" content="MangaFoxy" />
+
+<!-- Twitter Card Metadata -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Contact Us - MangaFoxy" />
+<meta name="twitter:description" content="Get in touch with the MangaFoxy team. We're here to help with any questions, feedback, or support you need regarding our manga reading platform." />
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ request.build_absolute_uri }}"
+    },
+    "name": "Contact MangaFoxy",
+    "description": "Get in touch with the MangaFoxy team. We're here to help with any questions, feedback, or support you need regarding our manga reading platform.",
+    "publisher": {
+        "@type": "Organization",
+        "name": "MangaFoxy"
+    }
+}
+</script>
+{% endblock %} 

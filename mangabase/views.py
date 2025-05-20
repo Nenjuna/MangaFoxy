@@ -15,6 +15,9 @@ from django.http import Http404, HttpResponse
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.urls import reverse
+from django.template import loader
+from django.views.decorators.cache import cache_page
+from django.db.models import Max
 
 
 header = {
@@ -209,3 +212,85 @@ def copyright_view(request):
 
 def terms_view(request):
     return render(request, 'terms.html')
+
+
+@cache_page(60 * 60)  # Cache for 1 hour
+def sitemap_index(request):
+    # Calculate total number of chapter pages
+    total_chapters = Chapter.objects.count()
+    items_per_page = 1000
+    total_pages = (total_chapters + items_per_page - 1) // items_per_page
+    chapter_pages = range(1, total_pages + 1)
+
+    template = loader.get_template('sitemap_index.xml')
+    return HttpResponse(template.render({'chapter_pages': chapter_pages}, request), content_type='application/xml')
+
+
+@cache_page(60 * 60)  # Cache for 1 hour
+def sitemap_manga(request):
+    page = request.GET.get('page', 1)
+    mangas = Manga.objects.all().order_by('-last_scraped')
+    paginator = Paginator(mangas, 1000)  # 1000 URLs per sitemap
+
+    try:
+        mangas = paginator.page(page)
+    except:
+        mangas = paginator.page(1)
+
+    template = loader.get_template('sitemap-manga.xml')
+    return HttpResponse(template.render({'mangas': mangas}, request), content_type='application/xml')
+
+
+@cache_page(60 * 60)  # Cache for 1 hour
+def sitemap_chapters(request, page=1):
+    chapters = Chapter.objects.select_related(
+        'manga').all().order_by('-created_at')
+    paginator = Paginator(chapters, 1000)  # 1000 URLs per sitemap
+
+    try:
+        chapters = paginator.page(page)
+    except:
+        raise Http404("Page not found")
+
+    template = loader.get_template('sitemap-chapters.xml')
+    return HttpResponse(template.render({'chapters': chapters}, request), content_type='application/xml')
+
+
+@cache_page(60 * 60)  # Cache for 1 hour
+def sitemap_genres(request):
+    # Get all unique genres
+    genres = Manga.objects.values_list('genre', flat=True).distinct()
+    unique_genres = set()
+    for genre_list in genres:
+        if genre_list:
+            unique_genres.update(genre_list)
+    genres = sorted(list(unique_genres))
+
+    template = loader.get_template('sitemap-genres.xml')
+    return HttpResponse(template.render({'genres': genres}, request), content_type='application/xml')
+
+
+@cache_page(60 * 60)  # Cache for 1 hour
+def sitemap_pages(request):
+    template = loader.get_template('sitemap-pages.xml')
+    return HttpResponse(template.render({}, request), content_type='application/xml')
+
+
+def about_view(request):
+    return render(request, 'about.html')
+
+
+def contact_view(request):
+    if request.method == 'POST':
+        # Here you can add logic to handle the contact form submission
+        # For example, sending an email or saving to database
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+
+        # Add your email sending logic here
+        # For now, we'll just render the page with a success message
+        return render(request, 'contact.html', {'success': True})
+
+    return render(request, 'contact.html')

@@ -9,7 +9,7 @@ from django.templatetags.static import static
 import re
 
 
-#Function to extact Chapter number
+# Function to extact Chapter number
 def extract_chapter_number(title):
     match = re.search(r'chapter\s*([\d.]+)', title, re.IGNORECASE)
     if match:
@@ -60,7 +60,7 @@ class Manga(models.Model):
     last_scraped = models.DateTimeField(null=True, blank=True)
 
     view_count = models.PositiveIntegerField(default=0)
-
+    updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -69,17 +69,17 @@ class Manga(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     # @property
     # def view_count(self):
     #     content_type = ContentType.objects.get_for_model(self)
     #     return ViewLog.objects.filter(content_type=content_type, object_id=self.id).count()
-    
+
     @property
     def unique_view_count(self):
         content_type = ContentType.objects.get_for_model(self)
         return ViewLog.objects.filter(content_type=content_type, object_id=self.id).values('session_id', 'ip_address').distinct().count()
-    
+
     @property
     def thumbnail_url(self):
         if self.image_url and self.image_url.strip() != "":
@@ -88,13 +88,16 @@ class Manga(models.Model):
 
 
 class Chapter(models.Model):
-    manga = models.ForeignKey(Manga, related_name='chapters', on_delete=models.CASCADE)
+    manga = models.ForeignKey(
+        Manga, related_name='chapters', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     subtitle = models.CharField(max_length=255, blank=True, null=True)
     chapter_number = models.CharField(max_length=50)
     slug = models.SlugField()
-    image_urls = models.JSONField(default=list, blank=True, null=True)  # Store image URLs as a list
+    # Store image URLs as a list
+    image_urls = models.JSONField(default=list, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     mangaowl_url = models.URLField(blank=True, null=True)
     view_count = models.PositiveIntegerField(default=0)
 
@@ -109,17 +112,16 @@ class Chapter(models.Model):
 
     def __str__(self):
         return f"{self.manga.title} - {self.title}"
-    
+
     # @property
     # def view_count(self):
     #     content_type = ContentType.objects.get_for_model(self)
     #     return ViewLog.objects.filter(content_type=content_type, object_id=self.id).count()
-    
+
     @property
     def unique_view_count(self):
         content_type = ContentType.objects.get_for_model(self)
         return ViewLog.objects.filter(content_type=content_type, object_id=self.id).values('session_id', 'ip_address').distinct().count()
-    
 
 
 class ViewLog(models.Model):
