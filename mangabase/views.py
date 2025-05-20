@@ -229,7 +229,7 @@ def sitemap_index(request):
 @cache_page(60 * 60)  # Cache for 1 hour
 def sitemap_manga(request):
     page = request.GET.get('page', 1)
-    mangas = Manga.objects.all().order_by('-last_scraped')
+    mangas = Manga.objects.all().order_by('-updated_at')
     paginator = Paginator(mangas, 1000)  # 1000 URLs per sitemap
 
     try:

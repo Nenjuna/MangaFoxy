@@ -3,7 +3,7 @@
     {% for manga in mangas %}
     <url>
         <loc>{{ request.scheme }}://{{ request.get_host }}{% url 'manga-detail' manga.slug %}</loc>
-        <lastmod>{{ manga.last_scraped|date:"Y-m-d" }}</lastmod>
+        <lastmod>{{ manga.updated_at|date:"Y-m-d" }}</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
     </url>
