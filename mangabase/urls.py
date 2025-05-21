@@ -39,6 +39,7 @@ urlpatterns = [
     path('genre/<slug:genre_slug>/', views.genre_view, name='genre-detail'),
     path('about/', views.about_view, name='about'),
     path('contact/', views.contact_view, name='contact'),
+    path('updates/', views.updates_view, name='updates'),
     path('<slug:slug>/', views.manga_detail_view, name='manga-detail'),
     path('<slug:manga_slug>/<slug:chapter_number>/',
          views.chapter_detail_view, name='chapter_detail'),

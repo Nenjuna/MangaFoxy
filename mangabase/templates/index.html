@@ -12,14 +12,14 @@
   <section aria-labelledby="manga-list-heading" class="container mx-auto px-4 py-8">
     <h1 id="manga-list-heading" class="text-3xl font-bold mb-4 text-base-content">Latest Manga Updates</h1>
     <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 rounded-box shadow-md list bg-base-100" role="list">
-      {% for manga in mangas %}
+    {% for manga in mangas %}
         <li role="listitem">
-          {% include "./components/manga_card.html" with manga=manga %}
+      {% include "./components/manga_card.html" with manga=manga %}
         </li>
-      {% empty %}
+    {% empty %}
         <li class="col-span-full text-center text-gray-500">No manga found.</li>
-      {% endfor %}
-    </ul>
+    {% endfor %}
+  </ul>
   </section>
 
   {% if mangas.has_other_pages %}

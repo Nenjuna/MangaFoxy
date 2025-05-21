@@ -64,3 +64,4 @@ class ChapterSitemap(Sitemap):
             'manga_slug': obj.manga.slug,
             'chapter_number': obj.slug
         })
+ 

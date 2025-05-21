@@ -1,0 +1,62 @@
+{% extends "base/base.html" %}
+
+{% block title %}Latest Updates - MangaFoxy{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-8">Latest Updates</h1>
+    
+    <div class="space-y-6">
+        {% for update in updates %}
+        <article class="bg-base-200 rounded-lg p-6 shadow-sm">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="badge badge-primary">{{ update.get_update_type_display }}</span>
+                <time class="text-sm text-base-content/70">{{ update.created_at|date:"F j, Y" }}</time>
+            </div>
+            
+            <h2 class="text-xl font-semibold mb-2">{{ update.title }}</h2>
+            
+            <div class="prose max-w-none">
+                {{ update.content|linebreaks }}
+            </div>
+            
+            {% if update.manga %}
+            <div class="mt-4">
+                <a href="{% url 'manga-detail' update.manga.slug %}" class="link link-primary">
+                    View Manga: {{ update.manga.title }}
+                </a>
+            </div>
+            {% endif %}
+            
+            {% if update.chapter %}
+            <div class="mt-2">
+                <a href="{% url 'chapter_detail' update.chapter.manga.slug update.chapter.slug %}" class="link link-primary">
+                    Read Chapter {{ update.chapter.chapter_number }}
+                </a>
+            </div>
+            {% endif %}
+        </article>
+        {% empty %}
+        <div class="text-center py-12">
+            <p class="text-lg text-base-content/70">No updates available yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if updates.has_other_pages %}
+    <div class="flex justify-center mt-8">
+        <div class="join">
+            {% if updates.has_previous %}
+            <a href="?page={{ updates.previous_page_number }}" class="join-item btn">«</a>
+            {% endif %}
+            
+            <span class="join-item btn">Page {{ updates.number }} of {{ updates.paginator.num_pages }}</span>
+            
+            {% if updates.has_next %}
+            <a href="?page={{ updates.next_page_number }}" class="join-item btn">»</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

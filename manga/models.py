@@ -145,3 +145,35 @@ class ViewLog(models.Model):
 
     def __str__(self):
         return f"{self.content_object} viewed at {self.timestamp}"
+
+
+class Update(models.Model):
+    UPDATE_TYPES = [
+        ('new_manga', 'New Manga'),
+        ('new_chapter', 'New Chapter'),
+        ('site_update', 'Site Update'),
+    ]
+
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    update_type = models.CharField(max_length=20, choices=UPDATE_TYPES)
+    manga = models.ForeignKey(
+        Manga, on_delete=models.CASCADE, null=True, blank=True)
+    chapter = models.ForeignKey(
+        Chapter, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.get_update_type_display()}: {self.title}"
+
+    def save(self, *args, **kwargs):
+        if not self.title:
+            if self.update_type == 'new_manga' and self.manga:
+                self.title = f"New Manga: {self.manga.title}"
+            elif self.update_type == 'new_chapter' and self.chapter:
+                self.title = f"New Chapter: {self.chapter.manga.title} Chapter {self.chapter.chapter_number}"
+        super().save(*args, **kwargs)

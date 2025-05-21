@@ -4,6 +4,8 @@ from django.db.models.functions import Cast
 from django.utils.text import slugify
 from django.core.paginator import Paginator
 import json
+from manga.models import Manga, Chapter, Update
+from django.utils import timezone
 from manga.models import Manga, Chapter
 
 
@@ -13,7 +15,6 @@ from bs4 import BeautifulSoup
 from .session_logger import log_view
 from django.http import Http404, HttpResponse
 from django.template.loader import render_to_string
-from django.utils import timezone
 from django.urls import reverse
 from django.template import loader
 from django.views.decorators.cache import cache_page
@@ -294,3 +295,16 @@ def contact_view(request):
         return render(request, 'contact.html', {'success': True})
 
     return render(request, 'contact.html')
+
+
+def updates_view(request):
+    updates = Update.objects.all().order_by('-created_at')
+    paginator = Paginator(updates, 20)  # Show 20 updates per page
+    page = request.GET.get('page')
+    updates = paginator.get_page(page)
+
+    return render(request, 'updates.html', {
+        'updates': updates,
+        'meta_description': 'Latest updates on new manga releases, chapter updates, and site news.',
+        'meta_keywords': 'manga updates, new chapters, new manga, site news',
+    })
