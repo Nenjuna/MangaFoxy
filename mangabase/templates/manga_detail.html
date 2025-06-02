@@ -1,9 +1,10 @@
 {% extends "./base/base.html" %}
+{% load static %}
 {% block title %}
     {{ manga.title }} - Read Free Manga Chapters | MangaFoxy
 {% endblock title %}
 {% block meta_description %}
-    {{ meta_description }}
+    {{ manga.summary|truncatewords:30 }}
 {% endblock meta_description %}
 {% block meta_keywords %}
     {{ manga.title }}, {{ manga.genre|join:", " }}, manga online, read free manga
@@ -50,7 +51,8 @@
                                     <ul class="flex flex-wrap gap-2 list-none m-0 p-0">
                                         {% for g in manga.genre %}
                                             <li>
-                                                <a href="{% url 'genre-detail' g|slugify %}" class="badge badge-soft badge-info hover:badge-primary">{{ g }}</a>
+                                                <a href="{% url 'genre-detail' g|slugify %}"
+                                                   class="badge badge-soft badge-info hover:badge-primary">{{ g }}</a>
                                             </li>
                                         {% endfor %}
                                     </ul>
@@ -122,10 +124,15 @@
                                class="btn btn-neutral">Latest Chapter</a>
                         {% endif %}
                     </nav>
+                    <!--Share Button-->
+                    <div>
+                        {% with title=manga.title %}
+                            {% include "components/share_buttons.html" %}
+                        {% endwith %}
+                    </div>
                 </div>
             </div>
         </article>
-
         {% if manga.summary %}
             <section class="card bg-base-100 shadow-md mt-10">
                 <div class="card-body">
@@ -134,11 +141,11 @@
                 </div>
             </section>
         {% endif %}
-
         {% if chapters %}
             <nav aria-label="Chapter list" class="mt-10">
                 <h2 class="sr-only">Chapter List</h2>
-                <ul class="grid sm:grid-cols-2 grid-cols-1 gap-4 p-4 list bg-base-100 rounded-box shadow-md" role="list">
+                <ul class="grid sm:grid-cols-2 grid-cols-1 gap-4 p-4 list bg-base-100 rounded-box shadow-md"
+                    role="list">
                     {% for chap in chapters %}
                         <li role="listitem" class="list-row">
                             <a class="link" href={{ chap.slug }}>{{ chap.title }}</a>
@@ -149,55 +156,50 @@
         {% endif %}
     </div>
 {% endblock content %}
-
 {% block extra_head %}
-<script src="https://fpyf8.com/88/tag.min.js" data-zone="148315" async data-cfasync="false"></script>
-    <!-- Canonical URL -->
-    <link rel="canonical" href="{{ request.build_absolute_uri }}" />
-    <!-- Open Graph Metadata -->
-    <meta property="og:type" content="book" />
-    <meta property="og:title" content="{{ manga.title }} | MangaFoxy" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="{{ manga.title }} - MangaFoxy">
     <meta property="og:description"
-          content="{{ manga.summary|truncatewords:40|striptags }}" />
-    <meta property="og:image" content="{{ manga.thumbnail_url }}" />
-    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-    <meta property="og:site_name" content="MangaFoxy" />
-    <!-- Twitter Card Metadata -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="{{ manga.title }} | MangaFoxy" />
-    <meta name="twitter:description"
-          content="{{ manga.summary|truncatewords:40|striptags }}" />
-    <meta name="twitter:image" content="{{ manga.thumbnail_url }}" />
-    <!-- JSON-LD Structured Data -->
+          content="{{ manga.summary|truncatewords:30 }}">
+    {% if manga.cover_image %}<meta property="og:image" content="{{ manga.cover_image.url }}">{% endif %}
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ request.build_absolute_uri }}">
+    <meta property="twitter:title" content="{{ manga.title }} - MangaFoxy">
+    <meta property="twitter:description"
+          content="{{ manga.summary|truncatewords:30 }}">
+    {% if manga.cover_image %}<meta property="twitter:image" content="{{ manga.cover_image.url }}">{% endif %}
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <!-- Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Book",
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "{{ request.build_absolute_uri }}"
-      },
-      "name": "{{ manga.title|escapejs }}",
-      "image": "{{ manga.thumbnail_url }}",
-      "url": "{{ request.build_absolute_uri }}",
-      "author": {
-        "@type": "Person",
-        "name": "{{ manga.author|default:'Unknown'|escapejs }}"
-      },
-      "genre": {{ genre_json|safe }},
-      "description": "{{ manga.summary|truncatewords:50|striptags|escapejs }}",
-      "datePublished": "{{ manga.year }}",
-      "publisher": {
+{
+    "@context": "https://schema.org",
+    "@type": "ComicStory",
+    "name": "{{ manga.title }}",
+    "description": "{{ manga.summary|truncatewords:30 }}",
+    "image": "{% if manga.cover_image %}{{ manga.cover_image.url }}{% endif %}",
+    "author": {
         "@type": "Organization",
         "name": "MangaFoxy"
-      }{% if manga.rating %},
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "{{ manga.rating }}",
-        "bestRating": "5",
-        "ratingCount": "{{ manga.view_count|default:'100' }}"
-      }
-      {% endif %}
-    }
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "MangaFoxy",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "{% static 'images/mangafox_favicon.ico' %}"
+        }
+    },
+    "datePublished": "{{ manga.created_at|date:'c' }}",
+    "dateModified": "{{ manga.updated_at|date:'c' }}"
+}
     </script>
+    <!-- Ad Script -->
+    <script src="https://fpyf8.com/88/tag.min.js"
+            data-zone="148315"
+            async
+            data-cfasync="false"></script>
 {% endblock extra_head %}

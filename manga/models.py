@@ -11,12 +11,15 @@ import re
 
 # Function to extact Chapter number
 def extract_chapter_number(title):
-    match = re.search(r'chapter\s*([\d.]+)', title, re.IGNORECASE)
+    # Match "chapter" followed by a number (int or decimal)
+    match = re.search(r'chapter\s*(\d+(?:\.\d+)?)', title, re.IGNORECASE)
     if match:
         return match.group(1)
-    # fallback: get any number
-    match = re.search(r'([\d.]+)', title)
-    return match.group(1) if match else None
+    
+    # Fallback: extract the first standalone number (int or decimal)
+    match = re.search(r'\d+(?:\.\d+)?', title)
+    return match.group(0) if match else None
+
 
 
 class Manga(models.Model):
