@@ -3,15 +3,17 @@ from .base import *
 import os
 
 DEBUG = False
-ALLOWED_HOSTS = ['mangafoxy.com']
+
+ALLOWED_HOSTS = ["mangafoxy.com"]
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'manglevi_django-test',
-        'USER': 'manglevi_django',
-        'PASSWORD': os.environ.get('DB_PASS'),
-        'HOST': 'localhost',
-        'PORT': '3306',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DB_NAME", "mangabase"),
+        "USER": os.environ.get("DB_USER", "mangabase_user"),
+        "PASSWORD": os.environ.get("DB_PASS"),
+        "HOST": os.environ.get("DB_HOST", "postgres"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
+
