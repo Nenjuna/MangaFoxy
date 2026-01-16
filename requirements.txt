@@ -6,7 +6,7 @@ charset-normalizer==3.4.1
 click==8.1.8
 colorama==0.4.6
 cssbeautifier==1.15.4
-Django==4.2.20
+Django>=4.2.20
 django-browser-reload==1.18.0
 django-csp==4.0
 djangorestframework==3.16.0
@@ -32,3 +32,4 @@ tomli==2.2.1
 tqdm==4.67.1
 typing_extensions==4.13.2
 urllib3==2.4.0
+whitenoise[brotli]>=6.0.0

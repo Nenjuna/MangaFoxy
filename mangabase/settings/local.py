@@ -8,6 +8,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "0.0.0.0",
+    "*",
     "192.168.0.3/16",  # LAN access
 ]
 
