@@ -52,11 +52,11 @@
     "dateModified": "{{ chapter.updated_at|date:'c' }}"
 }
     </script>
-    <!-- Ad Script -->
+    {% comment %} <!-- Ad Script -->
     <script src="https://fpyf8.com/88/tag.min.js"
             data-zone="148315"
             async
-            data-cfasync="false"></script>
+            data-cfasync="false"></script> {% endcomment %}
 {% endblock extra_head %}
 {% block content %}
     <nav aria-label="Breadcrumb"
