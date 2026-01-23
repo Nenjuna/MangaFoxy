@@ -1,13 +1,60 @@
 {% extends "./base/base.html" %}
+{% load static %}
 {% block title %}
   Read Manga Online Free – Latest Manga Updates | MangaFoxy.com
 {% endblock title %}
 {% block meta_description %}
-  Read manga online for free at MangaFoxy. Discover the latest chapters of top manga like One Piece, Jujutsu Kaisen, Solo Leveling, and more. Updated daily!"
+  Read manga online for free at MangaFoxy. Discover the latest chapters of top manga like One Piece, Jujutsu Kaisen, Solo Leveling, and more. Updated daily!
 {% endblock meta_description %}
 {% block meta_keywords %}
   read manga online, free manga, manga online, manga reader, latest manga chapters, popular manga, mangafox alternative, manga scanlations, manga updates, english manga, manga website, best manga site, manga list, new manga, manga chapters online
 {% endblock meta_keywords %}
+{% block extra_head %}
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content="Read Manga Online Free – Latest Manga Updates | MangaFoxy.com" />
+  <meta property="og:description" content="Read manga online for free at MangaFoxy. Discover the latest chapters of top manga like One Piece, Jujutsu Kaisen, Solo Leveling, and more. Updated daily!" />
+  <meta property="og:image" content="{% static 'images/mangafox_favicon.ico' %}" />
+  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+  <!-- Twitter -->
+  <meta name="twitter:title" content="Read Manga Online Free – Latest Manga Updates | MangaFoxy.com" />
+  <meta name="twitter:description" content="Read manga online for free at MangaFoxy. Discover the latest chapters of top manga like One Piece, Jujutsu Kaisen, Solo Leveling, and more. Updated daily!" />
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "MangaFoxy",
+    "url": "https://mangafoxy.com",
+    "description": "Read free manga online - Latest manga chapters updated daily",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://mangafoxy.com/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": [
+      {% for manga in mangas %}
+      {
+        "@type": "ListItem",
+        "position": {{ forloop.counter }},
+        "item": {
+          "@type": "Book",
+          "name": "{{ manga.title }}",
+          "url": "https://mangafoxy.com/{{ manga.slug }}"
+        }
+      }{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ]
+  }
+  </script>
+{% endblock extra_head %}
 {% block content %}
   <section aria-labelledby="manga-list-heading" class="container mx-auto px-4 py-8">
     <h1 id="manga-list-heading" class="text-3xl font-bold mb-4 text-base-content">Latest Manga Updates</h1>
@@ -41,44 +88,3 @@
     </nav>
   {% endif %}
 {% endblock content %}
-
-{% block extra_head %}
-  <!-- Canonical URL -->
-  <link rel="canonical" href="{{ request.build_absolute_uri }}" />
-  
-  <!-- Open Graph Metadata -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Read Manga Online Free – Latest Manga Updates | MangaFoxy.com" />
-  <meta property="og:description" content="Read manga online for free at MangaFoxy. Discover the latest chapters of top manga like One Piece, Jujutsu Kaisen, Solo Leveling, and more. Updated daily!" />
-  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-  <meta property="og:site_name" content="MangaFoxy" />
-  
-  <!-- Twitter Card Metadata -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Read Manga Online Free – Latest Manga Updates | MangaFoxy.com" />
-  <meta name="twitter:description" content="Read manga online for free at MangaFoxy. Discover the latest chapters of top manga like One Piece, Jujutsu Kaisen, Solo Leveling, and more. Updated daily!" />
-  
-  <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "{{ request.build_absolute_uri }}"
-    },
-    "name": "Latest Manga Updates",
-    "description": "Read manga online for free at MangaFoxy. Discover the latest chapters of top manga like One Piece, Jujutsu Kaisen, Solo Leveling, and more. Updated daily!",
-    "publisher": {
-      "@type": "Organization",
-      "name": "MangaFoxy"
-    },
-    "url": "{{ request.build_absolute_uri }}",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "MangaFoxy",
-      "url": "{{ request.scheme }}://{{ request.get_host }}"
-    }
-  }
-  </script>
-{% endblock extra_head %}

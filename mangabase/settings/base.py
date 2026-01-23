@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django_browser_reload.middleware.BrowserReloadMiddleware',
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
+    'mangabase.middleware.CSSMinifyMiddleware',  # CSS minification
     'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
@@ -171,4 +172,14 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
+
+# WhiteNoise configuration for better performance
+WHITENOISE_MAX_AGE = 31536000  # 1 year cache for static files
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_AUTOREFRESH = False  # Set to False in production
+
+# Compression settings
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = False
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

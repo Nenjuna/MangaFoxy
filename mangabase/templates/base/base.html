@@ -4,44 +4,35 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         {% load static %}
-        {% comment %} <link href="{% static 'css/output.css' %}" rel="stylesheet" type="text/css" rel="preload" as="style" /> {% endcomment %}
-        <link rel="preload"
-              href="{% static 'css/output.css' %}"
-              as="style"
-              onload="this.onload=null;this.rel='stylesheet'">
-        <noscript>
-            <link rel="stylesheet" href="{% static 'css/output.css' %}">
-        </noscript>
-        <!-- Base Styles -->
+        <!-- Critical CSS inline for faster rendering -->
         <style>
-            /* Ensure consistent heading sizes within semantic elements */
-            article h1, aside h1, nav h1, section h1 {
-                font-size: 1.875rem; /* text-3xl */
-                line-height: 2.25rem;
-                font-weight: 700;
-            }
-            article h2, aside h2, nav h2, section h2 {
-                font-size: 1.5rem; /* text-2xl */
-                line-height: 2rem;
-                font-weight: 600;
-            }
-            article h3, aside h3, nav h3, section h3 {
-                font-size: 1.25rem; /* text-xl */
-                line-height: 1.75rem;
-                font-weight: 600;
-            }
+            article h1,aside h1,nav h1,section h1{font-size:1.875rem;line-height:2.25rem;font-weight:700}
+            article h2,aside h2,nav h2,section h2{font-size:1.5rem;line-height:2rem;font-weight:600}
+            article h3,aside h3,nav h3,section h3{font-size:1.25rem;line-height:1.75rem;font-weight:600}
         </style>
+        <!-- Non-critical CSS loaded asynchronously -->
+        <link rel="preload" href="{% static 'css/output.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="{% static 'css/output.css' %}"></noscript>
         <!-- SEO Meta -->
         <meta name="description"
               content="{% block meta_description %}Read free manga online - updated daily.{% endblock meta_description %}">
         <meta name="keywords"
               content="{% block meta_keywords %}free manga, manga reader, read manga online{% endblock meta_keywords %}">
         <meta name="author" content="MangaFoxy">
-        <link rel="icon"
-              type="image/x-icon"
-              href="{% static 'images/mangafox_favicon.ico' %}">
+        <meta name="language" content="English">
+        <meta name="revisit-after" content="1 days">
+        <link rel="icon" type="image/x-icon" href="{% static 'images/mangafox_favicon.ico' %}">
+        <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock canonical_url %}">
         <!-- Robots -->
-        <meta name="robots" content="index, follow">
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock og_url %}">
+        <meta property="og:site_name" content="MangaFoxy">
+        <meta property="og:locale" content="en_US">
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@MangaFoxy">
         <title>
             {% block title %}
                 MangaFoxy
@@ -56,19 +47,18 @@
         <meta name="monetag" content="e1222cc5da8e7b88e6457df210608520">
         <link rel="apple-touch-icon" href="{% static 'images/mangafox_favicon.ico' %}">
         <!-- Preconnect to external domains -->
-        <link rel="preconnect" href="https://www.googletagmanager.com">
-        <link rel="preconnect" href="https://www.google-analytics.com">
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+        <link rel="dns-prefetch" href="https://www.google-analytics.com">
         {% block extra_head %}
         {% endblock extra_head %}
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-3K3SWMLKKN"></script>
+        <!-- Google tag (gtag.js) - Deferred for better performance -->
         <script>
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-        
           gtag('config', 'G-3K3SWMLKKN');
         </script>
+        <script defer src="https://www.googletagmanager.com/gtag/js?id=G-3K3SWMLKKN"></script>
     </head>
     <body>
         <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
