@@ -13,12 +13,17 @@ import requests
 import re
 from bs4 import BeautifulSoup
 from .session_logger import log_view
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, StreamingHttpResponse
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.template import loader
 from django.views.decorators.cache import cache_page
 from django.db.models import Max
+from django.core.cache import cache
+from django.views.decorators.http import etag
+import hashlib
+import base64
+from urllib.parse import urlencode, quote
 
 
 header = {
@@ -308,3 +313,102 @@ def updates_view(request):
         'meta_description': 'Latest updates on new manga releases, chapter updates, and site news.',
         'meta_keywords': 'manga updates, new chapters, new manga, site news',
     })
+
+
+# Image Proxy View for improved load times
+@cache_page(60 * 60 * 24)  # Cache for 24 hours
+def image_proxy(request):
+    """
+    Proxy view to serve images from third-party sources with caching.
+    This improves load times by:
+    1. Serving images through your domain (same-origin)
+    2. Caching images server-side
+    3. Adding proper cache headers
+    4. Reducing external requests
+    """
+    image_url = request.GET.get('url')
+    if not image_url:
+        return HttpResponse('Missing url parameter', status=400)
+    
+    # Validate URL to prevent SSRF attacks
+    if not image_url.startswith(('http://', 'https://')):
+        return HttpResponse('Invalid URL', status=400)
+    
+    # Create cache key from URL
+    cache_key = f'image_proxy_{hashlib.md5(image_url.encode()).hexdigest()}'
+    
+    # Try to get from cache first
+    cached_response = cache.get(cache_key)
+    if cached_response:
+        response = HttpResponse(cached_response['content'], content_type=cached_response['content_type'])
+        response['Cache-Control'] = 'public, max-age=86400'  # 24 hours
+        response['ETag'] = cached_response['etag']
+        return response
+    
+    try:
+        # Fetch image from third-party
+        # Extract referer from URL
+        try:
+            from urllib.parse import urlparse
+            parsed_url = urlparse(image_url)
+            referer = f"{parsed_url.scheme}://{parsed_url.netloc}"
+        except:
+            referer = ''
+        
+        img_response = requests.get(
+            image_url,
+            headers={
+                'User-Agent': header.get('User-agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36'),
+                'Referer': referer
+            },
+            timeout=10,
+            stream=True
+        )
+        img_response.raise_for_status()
+        
+        # Get content type
+        content_type = img_response.headers.get('Content-Type', 'image/jpeg')
+        
+        # Read image data
+        image_data = b''
+        for chunk in img_response.iter_content(chunk_size=8192):
+            image_data += chunk
+        
+        # Create ETag for caching
+        etag_value = hashlib.md5(image_data).hexdigest()
+        
+        # Cache the image data
+        cache.set(cache_key, {
+            'content': image_data,
+            'content_type': content_type,
+            'etag': etag_value
+        }, 60 * 60 * 24)  # Cache for 24 hours
+        
+        # Create response with proper headers
+        response = HttpResponse(image_data, content_type=content_type)
+        response['Cache-Control'] = 'public, max-age=86400'  # 24 hours
+        response['ETag'] = etag_value
+        response['Content-Length'] = len(image_data)
+        
+        return response
+        
+    except requests.RequestException as e:
+        # If image fetch fails, return a placeholder or error
+        return HttpResponse(f'Error loading image: {str(e)}', status=502)
+
+
+def get_proxied_image_url(image_url):
+    """
+    Helper function to generate proxied image URL.
+    Use this in templates or views to convert external URLs to proxied URLs.
+    """
+    if not image_url:
+        return image_url
+    
+    # Don't proxy local/static images
+    if image_url.startswith('/') or image_url.startswith('data:'):
+        return image_url
+    
+    # Encode the URL for the proxy
+    encoded_url = quote(image_url, safe='')
+    return reverse('image_proxy') + f'?url={encoded_url}'

@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load image_proxy %}
 {% block title %}
     {{ manga.title }} Chapter {{ chapter.chapter_number }} - MangaFoxy
 {% endblock title %}
@@ -125,12 +126,14 @@
                 {% for img in chapter.image_urls %}
                     <div class="card shadow-md bg-base-100">
                         <figure>
-                            <img src="{{ img }}"
+                            <img src="{{ img|proxy_image }}"
                                  alt="Page {{ forloop.counter }} of {{ chapter.title }} from {{ manga.title }}"
-                                 loading="lazy"
+                                 loading="{% if forloop.counter <= 2 %}eager{% else %}lazy{% endif %}"
+                                 fetchpriority="{% if forloop.counter == 1 %}high{% else %}auto{% endif %}"
                                  class="w-full"
                                  height="100%"
-                                 width="100%" />
+                                 width="100%"
+                                 decoding="async" />
                         </figure>
                     </div>
                 {% endfor %}

@@ -1,5 +1,6 @@
 {% extends "./base/base.html" %}
 {% load static %}
+{% load image_proxy %}
 {% block title %}
     {{ manga.title }} - Read Free Manga Chapters | MangaFoxy
 {% endblock title %}
@@ -16,12 +17,14 @@
             <div class="flex flex-col sm:flex-row">
                 <!-- Image: full width on mobile -->
                 <figure class="aspect-[3/4] w-full sm:w-1/3 overflow-hidden">
-                    <img src="{{ manga.thumbnail_url }}"
+                    <img src="{{ manga.thumbnail_url|proxy_image }}"
                          alt="{{ manga.title }}"
                          class="w-full h-full object-cover"
-                         loading="lazy"
+                         loading="eager"
+                         fetchpriority="high"
                          width="800"
-                         height="600" />
+                         height="600"
+                         decoding="async" />
                 </figure>
                 <!-- Card Body -->
                 <div class="card-body flex flex-col w-full sm:w-2/3">

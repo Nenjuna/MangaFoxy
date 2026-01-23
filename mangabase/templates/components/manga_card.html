@@ -1,13 +1,16 @@
+{% load image_proxy %}
 <article class="list-row flex flex-col"
-    itemscope
-    itemtype="https://schema.org/Book">
+         itemscope
+         itemtype="https://schema.org/Book">
     <figure class="aspect-w-16 aspect-h-9">
         <img class="mx-auto rounded-box object-cover h-40 sm:h-56 lg:h-56 w-full"
-             src="{{ manga.thumbnail_url }}"
+             src="{{ manga.thumbnail_url|proxy_image }}"
              alt="{{ manga.title }}"
              loading="lazy"
+             fetchpriority="auto"
              width="800"
              height="600"
+             decoding="async"
              itemprop="image" />
     </figure>
     <header class="mt-2" itemprop="name">
@@ -16,9 +19,9 @@
         </a>
     </header>
     <footer class="text-xs uppercase font-semibold opacity-60"
-         itemprop="additionalProperty"
-         itemscope
-         itemtype="https://schema.org/PropertyValue">
+            itemprop="additionalProperty"
+            itemscope
+            itemtype="https://schema.org/PropertyValue">
         <meta itemprop="name" content="Status" />
         <span itemprop="value">{{ manga.status }}</span>
     </footer>
