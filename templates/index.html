@@ -1,0 +1,121 @@
+{{define "title"}}Read Manga Online Free | MangaFoxy{{end}}
+{{define "metaDescription"}}Read manga online for free at MangaFoxy. Latest chapters updated daily.{{end}}
+{{define "metaKeywords"}}read manga online, free manga, manga reader, latest manga, manga chapters{{end}}
+{{define "searchValue"}}{{.searchQuery}}{{end}}
+
+{{define "extraHead"}}
+  <link rel="canonical" href="{{.requestURL}}" />
+  <meta property="og:title" content="Read Manga Online Free | MangaFoxy" />
+  <meta property="og:url" content="{{.requestURL}}" />
+{{end}}
+
+{{define "content"}}
+
+{{/* ── Hero (page 1, no search) ── */}}
+{{if and .featured (not .searchQuery)}}
+<section class="relative -mx-4 sm:-mx-6 lg:-mx-8 mb-10 overflow-hidden">
+  <!-- Background: dark gradient over the cover -->
+  <div class="absolute inset-0">
+    <img src="{{proxyImage .featured.ThumbnailURL}}"
+         alt=""
+         class="w-full h-full object-cover blur-xl opacity-20 scale-110"
+         aria-hidden="true" />
+    <div class="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row items-center gap-8 max-w-7xl mx-auto">
+
+    <!-- Left: Text -->
+    <div class="flex-1 space-y-4 text-center md:text-left">
+      {{if .featured.Genres}}
+        <p class="text-xs font-semibold tracking-[0.25em] text-primary uppercase">
+          {{range $i, $g := .featured.Genres}}{{if $i}} · {{end}}{{$g}}{{end}}
+        </p>
+      {{end}}
+
+      <h1 class="sh-display text-4xl sm:text-5xl lg:text-6xl text-foreground">
+        {{.featured.Title}}
+      </h1>
+
+      {{if .featured.Summary}}
+        <p class="text-sm text-muted-foreground leading-relaxed max-w-md">
+          {{truncateWords 25 .featured.Summary}}
+        </p>
+      {{end}}
+
+      <div class="flex items-center gap-4 justify-center md:justify-start">
+        {{if .featured.ChapterCount}}
+          <a href="/{{.featured.Slug}}/"
+             class="sh-btn sh-btn-default sh-btn-lg rounded-full px-8">
+            Read Now
+          </a>
+          <span class="text-sm text-muted-foreground">
+            {{.featured.ChapterCount}} chapters
+          </span>
+        {{else}}
+          <a href="/{{.featured.Slug}}/" class="sh-btn sh-btn-default sh-btn-lg rounded-full px-8">
+            View Manga
+          </a>
+        {{end}}
+      </div>
+    </div>
+
+    <!-- Right: Cover art -->
+    <div class="flex-shrink-0 w-40 sm:w-52 md:w-60">
+      <div class="rounded-xl overflow-hidden border border-border/50 shadow-2xl shadow-primary/20">
+        <img src="{{proxyImage .featured.ThumbnailURL}}"
+             alt="{{.featured.Title}}"
+             class="w-full block"
+             loading="eager"
+             fetchpriority="high"
+             width="300" />
+      </div>
+    </div>
+
+  </div>
+</section>
+{{end}}
+
+{{/* ── Section heading ── */}}
+<div class="flex items-center justify-between mb-5">
+  {{if .searchQuery}}
+    <h2 class="sh-display text-2xl">Results for "{{.searchQuery}}"</h2>
+  {{else if gt .mangas.Page 1}}
+    <h2 class="sh-display text-2xl">All Manga — Page {{.mangas.Page}}</h2>
+  {{else}}
+    <h2 class="sh-display text-2xl">New Releases</h2>
+  {{end}}
+  {{if not .searchQuery}}
+    <a href="/genre/" class="sh-btn sh-btn-outline sh-btn-sm">Browse Genres</a>
+  {{end}}
+</div>
+
+{{/* ── Manga grid ── */}}
+<ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 items-start" role="list">
+  {{range .mangas.Items}}
+    <li role="listitem">{{template "manga_card" .}}</li>
+  {{else}}
+    <li class="col-span-full py-16 text-center text-muted-foreground">No manga found.</li>
+  {{end}}
+</ul>
+
+{{/* ── Pagination ── */}}
+{{if or .mangas.HasPrev .mangas.HasNext}}
+  <nav class="flex items-center justify-center gap-2 mt-10">
+    {{if .mangas.HasPrev}}
+      <a href="?page=1" class="sh-btn sh-btn-outline sh-btn-sm">« First</a>
+      <a href="?page={{.mangas.PrevPage}}" class="sh-btn sh-btn-outline sh-btn-sm">‹ Prev</a>
+    {{end}}
+    <span class="px-3 text-sm text-muted-foreground tabular-nums">
+      {{.mangas.Page}} / {{.mangas.TotalPages}}
+    </span>
+    {{if .mangas.HasNext}}
+      <a href="?page={{.mangas.NextPage}}" class="sh-btn sh-btn-outline sh-btn-sm">Next ›</a>
+      <a href="?page={{.mangas.TotalPages}}" class="sh-btn sh-btn-outline sh-btn-sm">Last »</a>
+    {{end}}
+  </nav>
+{{end}}
+
+{{end}}

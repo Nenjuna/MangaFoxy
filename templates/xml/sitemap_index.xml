@@ -1,0 +1,17 @@
+{{define "sitemap_index.xml"}}<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap>
+        <loc>https://mangafoxy.com/sitemap-manga.xml</loc>
+    </sitemap>
+    {{range .chapterPages}}
+    <sitemap>
+        <loc>https://mangafoxy.com/sitemap-chapters-{{.}}.xml</loc>
+    </sitemap>
+    {{end}}
+    <sitemap>
+        <loc>https://mangafoxy.com/sitemap-genres.xml</loc>
+    </sitemap>
+    <sitemap>
+        <loc>https://mangafoxy.com/sitemap-pages.xml</loc>
+    </sitemap>
+</sitemapindex>{{end}}

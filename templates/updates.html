@@ -1,0 +1,50 @@
+{{define "title"}}Updates — MangaFoxy{{end}}
+
+{{define "content"}}
+<div class="max-w-3xl mx-auto">
+  <h1 class="text-xl font-bold tracking-tight mb-6">Updates</h1>
+
+  <div class="space-y-3">
+    {{range .updates.Items}}
+    <article class="sh-card p-5">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="sh-badge sh-badge-default">{{.UpdateTypeDisplay}}</span>
+        <time class="text-xs text-muted-foreground tabular-nums">{{formatDate .CreatedAt "F j, Y"}}</time>
+      </div>
+      <h2 class="text-sm font-semibold mb-2">{{.Title}}</h2>
+      <div class="text-sm text-muted-foreground leading-relaxed">{{linebreaks .Content}}</div>
+      {{if .Manga}}
+        <div class="mt-3 pt-3 border-t border-border">
+          <a href="/{{.Manga.Slug}}/" class="text-xs text-primary hover:underline underline-offset-3">
+            → {{.Manga.Title}}
+          </a>
+        </div>
+      {{end}}
+      {{if .Chapter}}
+        <div class="mt-2">
+          <a href="/{{.Chapter.Manga.Slug}}/{{.Chapter.Slug}}/" class="text-xs text-primary hover:underline underline-offset-3">
+            → Chapter {{.Chapter.ChapterNumber}}
+          </a>
+        </div>
+      {{end}}
+    </article>
+    {{else}}
+    <div class="sh-card p-12 text-center text-muted-foreground">
+      No updates yet.
+    </div>
+    {{end}}
+  </div>
+
+  {{if or .updates.HasPrev .updates.HasNext}}
+  <nav class="flex items-center justify-center gap-2 mt-8">
+    {{if .updates.HasPrev}}
+      <a href="?page={{.updates.PrevPage}}" class="sh-btn sh-btn-outline sh-btn-sm">‹</a>
+    {{end}}
+    <span class="text-sm text-muted-foreground">{{.updates.Page}} / {{.updates.TotalPages}}</span>
+    {{if .updates.HasNext}}
+      <a href="?page={{.updates.NextPage}}" class="sh-btn sh-btn-outline sh-btn-sm">›</a>
+    {{end}}
+  </nav>
+  {{end}}
+</div>
+{{end}}

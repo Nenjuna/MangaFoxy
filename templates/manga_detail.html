@@ -1,0 +1,193 @@
+{{define "title"}}{{.manga.Title}} — Read Free | MangaFoxy{{end}}
+{{define "metaDescription"}}{{truncateWords 30 .manga.Summary}}{{end}}
+{{define "metaKeywords"}}{{.manga.Title}}, {{join ", " .manga.Genres}}, manga online{{end}}
+
+{{define "extraHead"}}
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{.requestURL}}">
+  <meta property="og:title" content="{{.manga.Title}} — MangaFoxy">
+  <meta property="og:description" content="{{truncateWords 30 .manga.Summary}}">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="{{.requestURL}}">
+  <script type="application/ld+json">
+{
+  "@context":"https://schema.org","@type":"ComicStory",
+  "name":"{{.manga.Title}}","description":"{{truncateWords 30 .manga.Summary}}",
+  "author":{"@type":"Organization","name":"MangaFoxy"},
+  "publisher":{"@type":"Organization","name":"MangaFoxy"},
+  "dateModified":"{{formatDate .manga.UpdatedAt "c"}}"
+}
+  </script>
+{{end}}
+
+{{define "content"}}
+
+{{/* ── Hero — same layout as homepage featured ── */}}
+<section class="relative -mx-4 sm:-mx-6 lg:-mx-8 mb-8 overflow-hidden" itemscope itemtype="https://schema.org/ComicStory">
+
+  <!-- Blurred cover backdrop -->
+  <div class="absolute inset-0">
+    <img src="{{proxyImage .manga.ThumbnailURL}}" alt=""
+         class="w-full h-full object-cover blur-xl opacity-20 scale-110"
+         aria-hidden="true" />
+    <div class="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+  </div>
+
+  <!-- Content row -->
+  <div class="relative px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row items-center gap-8 max-w-7xl mx-auto">
+
+    <!-- Left: info -->
+    <div class="flex-1 space-y-4 text-center md:text-left">
+
+      {{if .manga.Genres}}
+        <p class="text-xs font-semibold tracking-[0.25em] text-primary uppercase">
+          {{range $i, $g := .manga.Genres}}{{if $i}} · {{end}}{{$g}}{{end}}
+        </p>
+      {{end}}
+
+      <h1 class="sh-display text-4xl sm:text-5xl lg:text-6xl text-foreground" itemprop="name">
+        {{.manga.Title}}
+      </h1>
+
+      {{if .manga.Alternative}}
+        <p class="text-sm text-muted-foreground -mt-2">{{.manga.Alternative}}</p>
+      {{end}}
+
+      {{if .manga.Summary}}
+        <p class="text-sm text-muted-foreground leading-relaxed max-w-md mx-auto md:mx-0">
+          {{truncateWords 25 .manga.Summary}}
+        </p>
+      {{end}}
+
+      <!-- Badges -->
+      <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+        {{if eq .manga.Status "ongoing"}}
+          <span class="sh-badge sh-badge-default gap-1"><span class="sh-status bg-green-400"></span>Ongoing</span>
+        {{else if eq .manga.Status "completed"}}
+          <span class="sh-badge sh-badge-secondary gap-1"><span class="sh-status bg-blue-400"></span>Completed</span>
+        {{else if eq .manga.Status "hiatus"}}
+          <span class="sh-badge sh-badge-outline gap-1"><span class="sh-status bg-yellow-400"></span>Hiatus</span>
+        {{else if .manga.Status}}
+          <span class="sh-badge sh-badge-outline">{{title .manga.Status}}</span>
+        {{end}}
+        {{if .manga.Year}}<span class="sh-badge sh-badge-outline">{{.manga.Year}}</span>{{end}}
+        {{if .manga.Rating}}<span class="sh-badge sh-badge-outline">★ {{.manga.Rating}}</span>{{end}}
+        {{if .manga.ViewCount}}<span class="sh-badge sh-badge-outline">{{.manga.ViewCount}} reads</span>{{end}}
+      </div>
+
+      <!-- Action buttons -->
+      <div class="flex items-center gap-3 flex-wrap justify-center md:justify-start">
+        {{if .firstChapter}}
+          <a href="/{{.manga.Slug}}/{{.firstChapter.Slug}}/"
+             class="sh-btn sh-btn-default sh-btn-lg rounded-full px-8">
+            Read Now
+          </a>
+        {{end}}
+        {{if .latestChapter}}
+          <span class="text-sm text-muted-foreground">
+            Ch. {{.latestChapter.ChapterNumber}} latest
+          </span>
+        {{end}}
+      </div>
+
+      {{template "share_buttons" (dict "title" .manga.Title "requestURL" .requestURL)}}
+    </div>
+
+    <!-- Right: cover — natural image size, same as homepage -->
+    <div class="flex-shrink-0 w-40 sm:w-52 md:w-60">
+      <div class="rounded-xl overflow-hidden border border-border/50 shadow-2xl shadow-primary/20">
+        <img src="{{proxyImage .manga.ThumbnailURL}}"
+             alt="{{.manga.Title}}"
+             class="w-full block"
+             loading="eager"
+             fetchpriority="high"
+             width="300"
+             decoding="async" />
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{{/* ── Details ── */}}
+<div class="max-w-5xl mx-auto space-y-5">
+
+  <!-- Genre links + detail grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+    {{if .manga.Genres}}
+      <div class="sh-card p-5">
+        <h2 class="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Genres</h2>
+        <div class="flex flex-wrap gap-1.5">
+          {{range .manga.Genres}}
+            <a href="/genre/{{slugify .}}/"
+               class="sh-badge sh-badge-secondary hover:bg-primary hover:text-primary-foreground hover:border-transparent transition-colors">
+              {{.}}
+            </a>
+          {{end}}
+        </div>
+      </div>
+    {{end}}
+
+    <div class="sh-card p-5">
+      <h2 class="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Details</h2>
+      <dl class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+        {{if .manga.Status}}
+          <dt class="text-muted-foreground">Status</dt><dd class="font-medium">{{title .manga.Status}}</dd>
+        {{end}}
+        {{if .manga.Year}}
+          <dt class="text-muted-foreground">Released</dt><dd class="font-medium">{{.manga.Year}}</dd>
+        {{end}}
+        {{if .manga.Rating}}
+          <dt class="text-muted-foreground">Rating</dt><dd class="font-medium">★ {{.manga.Rating}}</dd>
+        {{end}}
+        {{if .chapters}}
+          <dt class="text-muted-foreground">Chapters</dt><dd class="font-medium">{{len .chapters}}</dd>
+        {{end}}
+        {{if .manga.ViewCount}}
+          <dt class="text-muted-foreground">Views</dt><dd class="font-medium tabular-nums">{{.manga.ViewCount}}</dd>
+        {{end}}
+      </dl>
+    </div>
+
+  </div>
+
+  <!-- Synopsis -->
+  {{if .manga.Summary}}
+    <div class="sh-card p-5">
+      <h2 class="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Synopsis</h2>
+      <p class="text-sm leading-relaxed text-foreground/80">{{.manga.Summary}}</p>
+    </div>
+  {{end}}
+
+  <!-- Chapter list -->
+  {{if .chapters}}
+    <section>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="sh-display text-xl">Chapters</h2>
+        <span class="sh-badge sh-badge-outline">{{len .chapters}}</span>
+      </div>
+      <div class="sh-card">
+        <ul class="divide-y divide-border" role="list">
+          {{range .chapters}}
+            <li>
+              <a href="/{{$.manga.Slug}}/{{.Slug}}/"
+                 class="flex items-center justify-between px-4 py-3 hover:bg-accent transition-colors group">
+                <div class="flex items-center gap-3">
+                  <span class="text-xs font-bold text-primary tabular-nums w-10 text-right flex-shrink-0">{{.ChapterNumber}}</span>
+                  <span class="text-sm font-medium group-hover:text-primary transition-colors">{{.Title}}</span>
+                </div>
+                {{if .ViewCount}}
+                  <span class="text-xs text-muted-foreground tabular-nums ml-4 flex-shrink-0">{{.ViewCount}} reads</span>
+                {{end}}
+              </a>
+            </li>
+          {{end}}
+        </ul>
+      </div>
+    </section>
+  {{end}}
+
+</div>
+{{end}}

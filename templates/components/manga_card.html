@@ -1,0 +1,67 @@
+{{define "manga_card"}}
+<a href="/{{.Slug}}/" class="group block" itemprop="url">
+  <article class="rounded-lg overflow-hidden border border-border bg-card transition-all duration-200 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10"
+           itemscope itemtype="https://schema.org/Book">
+
+    <!-- Cover -->
+    <div class="relative overflow-hidden bg-secondary">
+      <img class="w-full block transition-transform duration-300 group-hover:scale-[1.03]"
+           src="{{proxyImage .ThumbnailURL}}"
+           alt="{{.Title}}"
+           loading="lazy"
+           width="300"
+           decoding="async"
+           itemprop="image" />
+
+      <!-- Rank badge -->
+      {{if .Rank}}
+      <div class="absolute top-2 left-2">
+        <span class="sh-rank">{{.Rank}}</span>
+      </div>
+      {{end}}
+
+      <!-- Status badge — top-right -->
+      {{if .Status}}
+      <div class="absolute top-2 right-2">
+        {{if eq .Status "ongoing"}}
+          <span class="sh-badge sh-badge-default text-[10px] gap-1">
+            <span class="sh-status bg-green-400"></span>Live
+          </span>
+        {{else if eq .Status "completed"}}
+          <span class="sh-badge sh-badge-secondary text-[10px] gap-1">
+            <span class="sh-status bg-blue-400"></span>Done
+          </span>
+        {{else if eq .Status "hiatus"}}
+          <span class="sh-badge sh-badge-outline text-[10px] gap-1">
+            <span class="sh-status bg-yellow-400"></span>Hiatus
+          </span>
+        {{end}}
+      </div>
+      {{end}}
+    </div>
+
+    <!-- Card body -->
+    <div class="px-2.5 pt-2 pb-3 space-y-1">
+      <h3 class="text-xs font-bold leading-snug line-clamp-2 text-card-foreground group-hover:text-primary transition-colors uppercase tracking-wide"
+          itemprop="name">
+        {{.Title}}
+      </h3>
+
+      <!-- Chapter info row -->
+      <div class="flex items-center justify-between gap-2">
+        {{if .LatestChapter}}
+          <span class="text-[10px] text-primary font-semibold">Ch. {{.LatestChapter}}</span>
+        {{else if .ChapterCount}}
+          <span class="text-[10px] text-muted-foreground">{{.ChapterCount}} ch.</span>
+        {{else}}
+          <span class="text-[10px] text-muted-foreground">—</span>
+        {{end}}
+        {{if .ViewCount}}
+          <span class="text-[10px] text-muted-foreground tabular-nums">{{.ViewCount}} reads</span>
+        {{end}}
+      </div>
+    </div>
+
+  </article>
+</a>
+{{end}}

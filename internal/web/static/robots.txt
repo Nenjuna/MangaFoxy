@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Allow: /genre/
+Allow: /copyright/
+Allow: /terms/
+
+# Disallow admin and API endpoints
+Disallow: /admin/
+Disallow: /api/
+Disallow: /accounts/
+Disallow: /static/admin/
+Disallow: /media/
+
+# Sitemap
+Sitemap: https://mangafoxy.com/sitemap.xml 

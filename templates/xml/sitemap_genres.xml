@@ -1,0 +1,10 @@
+{{define "sitemap_genres.xml"}}<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {{range .genres}}
+    <url>
+        <loc>https://mangafoxy.com/genre/{{slugify .}}/</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    {{end}}
+</urlset>{{end}}

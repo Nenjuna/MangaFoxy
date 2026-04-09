@@ -1,0 +1,56 @@
+{{define "title"}}{{if .selectedGenre}}{{.selectedGenre}} Manga | MangaFoxy{{else}}Browse Manga by Genre | MangaFoxy{{end}}{{end}}
+{{define "metaDescription"}}{{if .selectedGenre}}Read free {{.selectedGenre}} manga online at MangaFoxy. Updated daily.{{else}}Browse manga by genre at MangaFoxy. Action, romance, adventure, and more.{{end}}{{end}}
+
+{{define "extraHead"}}
+  <link rel="canonical" href="{{.requestURL}}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{{if .selectedGenre}}{{.selectedGenre}} Manga{{else}}Browse by Genre{{end}} | MangaFoxy" />
+  <meta property="og:url" content="{{.requestURL}}" />
+{{end}}
+
+{{define "content"}}
+  <!-- Header -->
+  <div class="mb-5">
+    <h1 class="text-xl font-bold tracking-tight mb-4">
+      {{if .selectedGenre}}{{.selectedGenre}}{{else}}Genres{{end}}
+    </h1>
+
+    <!-- Genre pills -->
+    <nav class="flex flex-wrap gap-2">
+      <a href="/genre/"
+         class="sh-badge {{if not .selectedGenre}}sh-badge-default{{else}}sh-badge-outline{{end}} hover:bg-primary hover:text-primary-foreground hover:border-transparent transition-colors cursor-pointer">
+        All
+      </a>
+      {{range .genres}}
+        <a href="/genre/{{slugify .}}/"
+           class="sh-badge {{if eq $.selectedGenre .}}sh-badge-default{{else}}sh-badge-outline{{end}} hover:bg-primary hover:text-primary-foreground hover:border-transparent transition-colors cursor-pointer">
+          {{.}}
+        </a>
+      {{end}}
+    </nav>
+  </div>
+
+  <!-- Grid -->
+  <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 items-start" role="list">
+    {{range .mangas.Items}}
+      <li>{{template "manga_card" .}}</li>
+    {{else}}
+      <li class="col-span-full py-16 text-center text-muted-foreground">No manga in this genre yet.</li>
+    {{end}}
+  </ul>
+
+  <!-- Pagination -->
+  {{if or .mangas.HasPrev .mangas.HasNext}}
+    <nav class="flex items-center justify-center gap-2 mt-10">
+      {{if .mangas.HasPrev}}
+        <a href="?page=1" class="sh-btn sh-btn-outline sh-btn-sm">« First</a>
+        <a href="?page={{.mangas.PrevPage}}" class="sh-btn sh-btn-outline sh-btn-sm">‹ Prev</a>
+      {{end}}
+      <span class="px-3 text-sm text-muted-foreground">{{.mangas.Page}} / {{.mangas.TotalPages}}</span>
+      {{if .mangas.HasNext}}
+        <a href="?page={{.mangas.NextPage}}" class="sh-btn sh-btn-outline sh-btn-sm">Next ›</a>
+        <a href="?page={{.mangas.TotalPages}}" class="sh-btn sh-btn-outline sh-btn-sm">Last »</a>
+      {{end}}
+    </nav>
+  {{end}}
+{{end}}

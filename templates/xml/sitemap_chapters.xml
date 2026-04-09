@@ -1,0 +1,11 @@
+{{define "sitemap_chapters.xml"}}<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {{range .chapters}}
+    <url>
+        <loc>https://mangafoxy.com/{{.Manga.Slug}}/{{.Slug}}/</loc>
+        <lastmod>{{formatDate .UpdatedAt "c"}}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    {{end}}
+</urlset>{{end}}

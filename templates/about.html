@@ -1,0 +1,39 @@
+{{define "title"}}About — MangaFoxy{{end}}
+{{define "metaDescription"}}Learn more about MangaFoxy — your source for free manga online.{{end}}
+
+{{define "extraHead"}}
+  <link rel="canonical" href="{{.requestURL}}" />
+  <meta property="og:title" content="About — MangaFoxy" />
+  <meta property="og:url" content="{{.requestURL}}" />
+  <script type="application/ld+json">
+  { "@context":"https://schema.org","@type":"AboutPage","name":"About MangaFoxy",
+    "publisher":{"@type":"Organization","name":"MangaFoxy"} }
+  </script>
+{{end}}
+
+{{define "content"}}
+<div class="max-w-3xl mx-auto">
+  <h1 class="text-xl font-bold tracking-tight mb-6">About MangaFoxy</h1>
+  <div class="sh-card p-6 sh-prose space-y-6">
+    <section>
+      <h2>Our Mission</h2>
+      <p>MangaFoxy is dedicated to giving manga readers a fast, clean reading experience — free, updated daily, no clutter.</p>
+    </section>
+    <div class="sh-separator"></div>
+    <section>
+      <h2>What We Offer</h2>
+      <ul>
+        <li>Extensive collection of manga titles</li>
+        <li>Daily chapter updates</li>
+        <li>Mobile-first reading interface</li>
+        <li>Fast image delivery via proxy</li>
+      </ul>
+    </section>
+    <div class="sh-separator"></div>
+    <section>
+      <h2>Contact</h2>
+      <p>Questions or suggestions? <a href="/contact/">Get in touch.</a></p>
+    </section>
+  </div>
+</div>
+{{end}}

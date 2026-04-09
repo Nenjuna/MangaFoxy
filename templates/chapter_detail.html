@@ -1,0 +1,93 @@
+{{define "title"}}{{.manga.Title}} Ch.{{.chapter.ChapterNumber}} — MangaFoxy{{end}}
+{{define "metaDescription"}}Read {{.manga.Title}} Chapter {{.chapter.ChapterNumber}} online. {{.summaryShort}}{{end}}
+{{define "metaKeywords"}}{{.manga.Title}}, Chapter {{.chapter.ChapterNumber}}, {{join ", " .manga.Genres}}{{end}}
+
+{{define "extraHead"}}
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="{{.requestURL}}">
+  <meta property="og:title" content="{{.manga.Title}} Ch.{{.chapter.ChapterNumber}}">
+  <meta property="og:description" content="Read {{.manga.Title}} Chapter {{.chapter.ChapterNumber}} online.">
+  {{if .chapter.ImageURLList}}<meta property="og:image" content="{{first .chapter.ImageURLList}}">{{end}}
+  <link rel="canonical" href="{{.requestURL}}">
+  <script type="application/ld+json">
+{
+  "@context":"https://schema.org","@type":"Article",
+  "headline":"{{.manga.Title}} Chapter {{.chapter.ChapterNumber}}",
+  "author":{"@type":"Organization","name":"MangaFoxy"},
+  "datePublished":"{{formatDate .chapter.CreatedAt "c"}}",
+  "dateModified":"{{formatDate .chapter.UpdatedAt "c"}}"
+}
+  </script>
+{{end}}
+
+{{define "content"}}
+<div class="max-w-2xl mx-auto">
+
+  <!-- Breadcrumb -->
+  <nav class="flex items-center gap-2 text-xs text-muted-foreground mb-4"
+       itemscope itemtype="https://schema.org/BreadcrumbList">
+    <a href="/" class="hover:text-foreground transition-colors">Home</a>
+    <span class="text-border">/</span>
+    <a href="/{{.manga.Slug}}/" class="hover:text-foreground transition-colors truncate max-w-[120px]">{{.manga.Title}}</a>
+    <span class="text-border">/</span>
+    <span class="text-foreground">Ch.{{.chapter.ChapterNumber}}</span>
+  </nav>
+
+  <!-- Chapter header -->
+  <div class="text-center mb-5">
+    <h1 class="text-lg font-bold">{{.manga.Title}}</h1>
+    <h2 class="text-sm text-muted-foreground mt-1">{{.chapter.Title}}</h2>
+    {{if .chapter.Subtitle}}
+      <p class="text-xs text-muted-foreground mt-0.5">{{.chapter.Subtitle}}</p>
+    {{end}}
+    <div class="mt-3 flex justify-center">
+      {{template "share_buttons" (dict "title" .manga.Title "requestURL" .requestURL)}}
+    </div>
+  </div>
+
+  <!-- Nav top -->
+  {{template "chapter_nav" .}}
+
+  <!-- Pages -->
+  {{if .chapter.ImageURLList}}
+    <div class="mt-4 flex flex-col">
+      {{range $i, $img := .chapter.ImageURLList}}
+        <img src="{{proxyImage $img}}"
+             alt="Page {{add $i 1}}"
+             loading="{{if le (add $i 1) 2}}eager{{else}}lazy{{end}}"
+             fetchpriority="{{if eq (add $i 1) 1}}high{{else}}auto{{end}}"
+             class="w-full block"
+             decoding="async" />
+      {{end}}
+    </div>
+  {{else}}
+    <div class="sh-card p-12 text-center text-muted-foreground mt-6">
+      No images available for this chapter.
+    </div>
+  {{end}}
+
+  <!-- Nav bottom -->
+  <div class="mt-6">{{template "chapter_nav" .}}</div>
+
+</div>
+{{end}}
+
+{{define "chapter_nav"}}
+<div class="flex items-center justify-between gap-2 py-3">
+  {{if .prevChapter}}
+    <a href="/{{.manga.Slug}}/{{.prevChapter.Slug}}/" class="sh-btn sh-btn-outline sh-btn-sm">← Prev</a>
+  {{else}}
+    <span class="sh-btn sh-btn-outline sh-btn-sm opacity-30 cursor-not-allowed select-none">← Prev</span>
+  {{end}}
+
+  <a href="/{{.manga.Slug}}/" class="text-xs text-muted-foreground hover:text-primary transition-colors">
+    All Chapters
+  </a>
+
+  {{if .nextChapter}}
+    <a href="/{{.manga.Slug}}/{{.nextChapter.Slug}}/" class="sh-btn sh-btn-default sh-btn-sm">Next →</a>
+  {{else}}
+    <span class="sh-btn sh-btn-outline sh-btn-sm opacity-30 cursor-not-allowed select-none">Next →</span>
+  {{end}}
+</div>
+{{end}}
